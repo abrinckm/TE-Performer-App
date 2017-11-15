@@ -1,6 +1,22 @@
 const config = require('config');
+const bunyan = require('bunyan');
+
+const logger = bunyan.createLogger({
+  "name": "TEDummyApp",
+  "streams": [
+    {
+      "level": "info",
+      "stream": process.stdout
+    },
+    {
+      "level": "error",
+      "stream": process.stderr
+    }
+  ]
+});
 
 let apiUrl = config.get('apiUrl');
 
-console.log(`Environment is ${process.env.NODE_ENV}`);
-console.log(`Using API ${apiUrl}`);
+logger.info(`Environment is ${process.env.NODE_ENV}`);
+logger.info(`Using API ${apiUrl}`);
+

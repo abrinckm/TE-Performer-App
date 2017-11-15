@@ -4,7 +4,7 @@
   "description": "Provides models for the different API resources & unit tests for testing user storys and workflows using the API.",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=dev node index.js",
+    "dev": "NODE_ENV=dev node index.js | ./node_modules/.bin/bunyan",
     "prod": "NODE_ENV=prod node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/abrinckm/TE-Performer-App#readme",
   "dependencies": {
+    "bunyan": "^1.8.12",
     "config": "^1.28.1"
   }
 }
