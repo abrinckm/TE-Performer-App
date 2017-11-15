@@ -4,16 +4,21 @@
   "description": "Provides models for the different API resources & unit tests for testing user storys and workflows using the API.",
   "main": "index.js",
   "scripts": {
+    "dev": "NODE_ENV=dev node index.js",
+    "prod": "NODE_ENV=prod node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/abrinckm/TE-Performer-App.git"
   },
-  "author": " <abrinckm@nd.edu>",
+  "author": "University of Notre Dame, Center for Research Computing",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/abrinckm/TE-Performer-App/issues"
   },
-  "homepage": "https://github.com/abrinckm/TE-Performer-App#readme"
+  "homepage": "https://github.com/abrinckm/TE-Performer-App#readme",
+  "dependencies": {
+    "config": "^1.28.1"
+  }
 }
