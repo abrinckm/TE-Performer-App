@@ -23,7 +23,7 @@ class BaseWrapper {
     }, options || {});
 
     options.uri = `${this.apiUrl}${path}`;
-    console.log(options);
+    
     return request(options);
   }
 
