@@ -1,6 +1,5 @@
 const config = require('config');
 const bunyan = require('bunyan');
-const { UserProfileWrapper } = require('./src/wrapper');
 
 const logger = bunyan.createLogger({
   "name": "TEDummyApp",
@@ -15,9 +14,6 @@ const logger = bunyan.createLogger({
     }
   ]
 });
-
-let up = new UserProfileWrapper();
-up.debug();
 
 let apiUrl = config.get('apiUrl');
 

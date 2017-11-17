@@ -7,9 +7,7 @@ class UserProfileWrapper extends BaseWrapper {
   }
 
   debug() {
-    if (this.logger) {
-      this.logger.info(`${this.apiUrl}  `);
-    }
+    this.logger.info(`${this.apiUrl}  `);
   }  
 }
 
