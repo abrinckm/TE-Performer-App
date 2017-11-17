@@ -23,6 +23,22 @@ class BaseWrapper {
     }, options || {});
 
     options.uri = `${this.apiUrl}${path}`;
+    console.log(options);
+    return request(options);
+  }
+
+  // -------------------
+  // POST request
+  post(path, body, options) {
+    options = _.merge({
+      headers: {'content-type':'application/json'},
+      body: body,
+      json: true,
+    }, options || {}, {
+      method: 'POST'
+    });
+  
+    options.uri = `${this.apiUrl}${path}`;
 
     return request(options);
   }

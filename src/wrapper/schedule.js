@@ -20,6 +20,8 @@ class ScheduleWrapper extends BaseWrapper {
       })
     ;
   }
+
+  
 }
 
 module.exports = ScheduleWrapper;
