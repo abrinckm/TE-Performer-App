@@ -1,6 +1,6 @@
 const config = require('config');
 const bunyan = require('bunyan');
-const { Application } = require('./src/wrapper');
+const { Application, ScheduleWrapper } = require('./src/wrapper');
 
 const logger = bunyan.createLogger({
   "name": "TEDummyApp",
@@ -18,6 +18,9 @@ const logger = bunyan.createLogger({
 
 let app = new Application({logger});
 app.getVersion();
+
+let schedules = new ScheduleWrapper({logger});
+schedules.listAll();
 
 let apiUrl = config.get('apiUrl');
 
