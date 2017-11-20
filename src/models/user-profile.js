@@ -64,14 +64,14 @@ class UserProfile extends BaseModel {
         const error = 'UserProfile.query() byIds filter expects an array of ids';
         return new Promise((resolve, reject) => reject(error));
       }
-      let func = 'listByIds';
-      let values = [value];
+      func = 'listByIds';
+      values = [value];
     } 
 
     // -------
     return wrapper[func](...values)
       .then(results => {
-        return results.data.reduce((models, userdata) => {
+        return results.reduce((models, userdata) => {
           models.push(new UserProfile(userdata));
           return models;
         }, []);

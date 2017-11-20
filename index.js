@@ -22,8 +22,8 @@ let app = new Application({logger});
 app.getVersion();
 
 let userProfiles = new UserProfile({logger});
-// UserProfile.query({byIds:['5a0e603dc9e77c000cefd8aa','5a0e603dc9e77c000cefd8ad']})
-UserProfile.findRecord('5a0e603dc9e77c000cefd8aa')
+UserProfile.query({byIds:['5a0e603dc9e77c000cefd8aa','5a0e603dc9e77c000cefd8ad']})
+// UserProfile.findRecord('5a0e603dc9e77c000cefd8aa')
   .then(users => {
     logger.info(users);
   })
