@@ -6,55 +6,35 @@ class TeamWrapper extends BaseWrapper {
         this.apiUrl += '/team';
     }
 
-    apiGet(url, description) {
-        const self = this;
-        self.logger.info(description);
-        return self.get(url)
+    _get(uri) {
+        return this.get(uri)
             .then(response => {
-                let result = JSON.parse(response).data;
-                self.logger.info(result);
-                return result;
-            })
-            .catch(e => {
-                self.logger.error(e);
+                return JSON.parse(response).data;
             });
     }
 
     listAll() {
-        let url = '/get';
-        let description = 'Fetching a list of all teams...';
-        this.apiGet(url, description);
+        return this._get('/get');
     }
 
     getById(id) {
-        let url  = `/get/${id}`;
-        let description = `Fetching team with ID: ${id}`;
-        this.apiGet(url, description);
+        return this._get(`/get/${id}`);
     }
 
     getByIds(idArray) {
-        let idList = idArray.join(',');
-        let url = `/get/byIds/${idList}`;
-        let description = `Fetching team(s) with ID(s): ${idList}`;
-        this.apiGet(url, description);
+        this._get(`/get/byIds/${idArray.join(',')}`);
     }
 
     getByConditionLabel(condition) {
-        let url = `/get/byConditionLabel/${condition}`;
-        let description = `Fetching team(s) with condition: ${condition}`;
-        this.apiGet(url, description);
+        this._get(`/get/byConditionLabel/${condition}`);
     }
 
     getByContext(condition, block) {
-        let url = `/get/byContext/${condition}/${block}`
-        let description = `Fetching team(s) with condition: ${condition} and block: ${block}`;
-        this.apiGet(url, description);
+        this._get(`/get/byContext/${condition}/${block}`);
     }
 
     getByProfileId(profileId) {
-        let url = `/get/byProfileId/${profileId}`;
-        let description = `Fetching team(s) with userProfile: ${profileId}`;
-        this.apiGet(url, description);
+        this._get(`/get/byProfileId/${profileId}`);
     }
 }
 
