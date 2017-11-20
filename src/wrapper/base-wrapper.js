@@ -9,7 +9,7 @@ class BaseWrapper {
     {
       info:(out)=>{console.log(out)},
       error:(out)=>{console.error(out)}
-    }
+    };
     this.apiUrl = config.get('apiUrl');
   }   
 
