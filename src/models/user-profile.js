@@ -72,7 +72,7 @@ class UserProfile extends BaseModel {
     return wrapper[func](...values)
       .then(results => {
         return results.data.reduce((models, userdata) => {
-          models.push(new UserProfile({logger, userdata}));
+          models.push(new UserProfile(userdata));
           return models;
         }, []);
       })
@@ -85,7 +85,11 @@ class UserProfile extends BaseModel {
   */
   static findRecord(id) {
     const wrapper = new UserProfileWrapper();
-    return wrapper.getByUserId(id);
+    return wrapper.getByUserId(id)
+      .then(userdata => {
+        return new UserProfile(userdata);
+      })
+    ;
   }
 
   get(attr) {
