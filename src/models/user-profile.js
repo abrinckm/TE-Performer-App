@@ -68,7 +68,7 @@ class UserProfile extends BaseModel {
       values = [value];
     } 
 
-    // -------
+    // ----------------------------
     return wrapper[func](...values)
       .then(results => {
         return results.reduce((models, userdata) => {
@@ -93,7 +93,11 @@ class UserProfile extends BaseModel {
   }
 
   get(attr) {
-    return _.get(attr, this.data);
+    return _.get(this.data, attr);
+  }
+
+  set(attr, val) {
+    return _.set(this.data, attr, val);
   }
 
   /* 

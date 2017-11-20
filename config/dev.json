@@ -1,3 +1,4 @@
 {
+  "env": "dev",
   "apiUrl" : "https://dev-www.createbetterreasoning.com/api"
 }

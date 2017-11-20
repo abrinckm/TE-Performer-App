@@ -1,3 +1,4 @@
 {
+  "env": "prod",
   "apiUrl" : "https://www.createbetterreasoning.com/api"
 }

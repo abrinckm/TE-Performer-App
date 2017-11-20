@@ -1,4 +1,5 @@
 module.exports = {
+  "env": "prod",
   "apiUrl": "www.createbetterreasoning.com/api",
   "logger": {
     "name": "TEDummyApp",
