@@ -13,26 +13,26 @@ class BaseModel {
    */
   
   query() {
-    self.logger.error(
-      `${this.constructor} but does not override the query() method!`
+    this.logger.error(
+      `${this.constructor.name} extends BaseModel but does not override the query() method!`
     );
   }
 
   findRecord() {
-    self.logger.error(
-      `${this.constructor} but does not override the findRecord() method!`
+    this.logger.error(
+      `${this.constructor.name} extends BaseModel but does not override the findRecord() method!`
     );
   }
 
   findAll() {
-    self.logger.error(
-      `${this.constructor} but does not override the findAll() method!`
+    this.logger.error(
+      `${this.constructor.name} extends BaseModel but does not override the findAll() method!`
     );
   }
 
   save() {
-    self.logger.error(
-      `${this.constructor} but does not override the save() method!`
+    this.logger.error(
+      `${this.constructor.name} extends BaseModel but does not override the save() method!`
     );
   }
 }
