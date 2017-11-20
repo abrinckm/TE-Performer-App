@@ -22,7 +22,15 @@ let app = new Application({logger});
 app.getVersion();
 
 let userProfiles = new UserProfile({logger});
-userProfiles.query();
+// userProfiles.query({byIds:['5a0e603dc9e77c000cefd8aa','5a0e603dc9e77c000cefd8ad']})
+userProfiles.findRecord('5a0e603dc9e77c000cefd8aa')
+  .then(users => {
+    logger.info(users);
+  })
+  .catch(e => {
+    logger.error(e);
+  })
+;
 
 let apiUrl = config.get('apiUrl');
 

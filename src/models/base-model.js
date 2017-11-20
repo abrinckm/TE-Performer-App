@@ -12,6 +12,9 @@ class BaseModel {
    * Override below functions
    */
   
+
+  // We can specify which endpoint to call in the query like this:
+  // { byIds: "1,2,3" }
   query() {
     this.logger.error(
       `${this.constructor.name} extends BaseModel but does not override the query() method!`
