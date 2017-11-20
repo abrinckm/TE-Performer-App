@@ -15,28 +15,39 @@ class BaseModel {
 
   // We can specify which endpoint to call in the query like this:
   // { byIds: "1,2,3" }
-  query() {
-    this.logger.error(
+  static query() {
+    let error =
       `${this.constructor.name} extends BaseModel but does not override the query() method!`
-    );
+    ;
+    throw new Error(error);
   }
 
-  findRecord() {
-    this.logger.error(
+  static findRecord() {
+    let error =
       `${this.constructor.name} extends BaseModel but does not override the findRecord() method!`
-    );
+    ;
+    throw new Error(error);
   }
 
-  findAll() {
-    this.logger.error(
+  static findAll() {
+    let error =
       `${this.constructor.name} extends BaseModel but does not override the findAll() method!`
-    );
+    ;
+    throw new Error(error);
+  }
+
+  get() {
+    let error =
+    `${this.constructor.name} extends BaseModel but does not override the get() method!`
+    ;
+    throw new Error(error);
   }
 
   save() {
-    this.logger.error(
+    let error =
       `${this.constructor.name} extends BaseModel but does not override the save() method!`
-    );
+    ;
+    throw new Error(error);
   }
 }
 

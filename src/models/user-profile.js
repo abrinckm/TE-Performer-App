@@ -23,16 +23,14 @@ class UserProfile extends BaseModel {
     };
     
     const self = this;
-    Object.keys(params).forEach(attr => {
+    const data = params.data ? params.data : params;
+    Object.keys(data).forEach(attr => {
       if (_.has(self.data, attr)) { 
         self.data[attr] = params[attr]; 
       }
     });
   }
 
-  get(attr) {
-    return _.get(attr, this.data);
-  }
   /*
   Query is meant to return a list of records for the resource.
   
@@ -53,34 +51,52 @@ class UserProfile extends BaseModel {
       }
     }
   */
-  query(q) {
+  static query(q) {
+    const wrapper = new UserProfileWrapper();
+
+    let func, values;
     let keys = Object.keys(q);
     let filter = keys[0];
-    let value = q[filter];
 
     if (filter === 'byIds') {
+      let value = q[filter];
       if (!_.isArray(value)) {
         const error = 'UserProfile.query() byIds filter expects an array of ids';
         return new Promise((resolve, reject) => reject(error));
       }
-      return this.wrapper.listByIds(value);
+      let func = 'listByIds';
+      let values = [value];
     } 
+
+    // -------
+    return wrapper[func](...values)
+      .then(results => {
+        return results.data.reduce((models, userdata) => {
+          models.push(new UserProfile({logger, userdata}));
+          return models;
+        }, []);
+      })
+    ;
   }
 
   /*
   Find record will return a single record by id
   @params id {string} 
   */
-  findRecord(id) {
-    return this.wrapper.getByUserId(id);
+  static findRecord(id) {
+    const wrapper = new UserProfileWrapper();
+    return wrapper.getByUserId(id);
   }
 
+  get(attr) {
+    return _.get(attr, this.data);
+  }
 
   /* 
   Save will update the resource from the current state of this model. 
   */
   save() {
-    // (as of the writing of this comment, only the 'lastActive' and 'trained' attributes may be updated.)
+    // (as of the writing of this comment, only the 'lastActive' and 'trained' attributes can be updated.)
     let { id, trainedOn, lastActive } = this.data;
     const model = this;
     Object.keys(trainedOn).reduce((_p, condition) => {
