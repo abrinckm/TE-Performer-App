@@ -22,19 +22,19 @@ class TeamWrapper extends BaseWrapper {
     }
 
     getByIds(idArray) {
-        this._get(`/get/byIds/${idArray.join(',')}`);
+        return this._get(`/get/byIds/${idArray.join(',')}`);
     }
 
     getByConditionLabel(condition) {
-        this._get(`/get/byConditionLabel/${condition}`);
+        return this._get(`/get/byConditionLabel/${condition}`);
     }
 
     getByContext(condition, block) {
-        this._get(`/get/byContext/${condition}/${block}`);
+        return this._get(`/get/byContext/${condition}/${block}`);
     }
 
     getByProfileId(profileId) {
-        this._get(`/get/byProfileId/${profileId}`);
+        return this._get(`/get/byProfileId/${profileId}`);
     }
 }
 
