@@ -4,10 +4,8 @@
   "description": "Provides models for the different API resources & unit tests for testing user stories and workflows using the API.",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=dev node index.js | ./node_modules/.bin/bunyan -o short",
-    "prod": "NODE_ENV=prod node index.js | ./node_modules/.bin/bunyan -o short",
-    "workflows.dev": "NODE_ENV=dev ./node_modules/mocha/bin/mocha",
-    "workflows.prod": "NODE_ENV=prod ./node_modules/mocha/bin/mocha"
+    "dev": "NODE_ENV=dev ./node_modules/mocha/bin/mocha",
+    "prod": "NODE_ENV=prod ./node_modules/mocha/bin/mocha"
   },
   "repository": {
     "type": "git",

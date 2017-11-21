@@ -58,6 +58,7 @@ class UserProfile extends BaseModel {
     let keys = Object.keys(q);
     let filter = keys[0];
 
+    // ** byIds **
     if (filter === 'byIds') {
       let value = q[filter];
       if (!_.isArray(value)) {
@@ -66,17 +67,24 @@ class UserProfile extends BaseModel {
       }
       func = 'listByIds';
       values = [value];
-    } 
+    // ** byConditionLabel **
+    } else if (filter === 'byConditionLabel') {
+      let value = q[filter];
+      func = 'listByConditionLabel';
+      values = [value];
+    }
 
     // ----------------------------
-    return wrapper[func](...values)
-      .then(results => {
-        return results.reduce((models, userdata) => {
-          models.push(new UserProfile(userdata));
-          return models;
-        }, []);
-      })
-    ;
+    if (func && values) {
+      return wrapper[func](...values)
+        .then(results => {
+          return results.reduce((models, userdata) => {
+            models.push(new UserProfile(userdata));
+            return models;
+          }, []);
+        })
+      ;
+    }
   }
 
   /*

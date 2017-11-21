@@ -2,11 +2,18 @@ const config = require('config');
 const assert = require('assert');
 const { UserProfile } = require('../src/models');
 
-// an existing user id to test against (differs depending on which api we use)
-const userId = config.get('env') === 'prod' ? '5a0ef457c9e77c000ccaaaaf' : '5a0e603dc9e77c000cefd8aa';
+let userId, userModel;
 
 describe('Basic Flow (steps B1 - B3)', function() {
-  let userModel;
+  
+  before(function(done) {
+    UserProfile.query({'byConditionLabel': 'bard'})
+      .then(_users => {
+        userId = _users.find(u=>u.get('userName')==='user-1005').get('id');
+        done();
+      })
+    ;
+  });
 
   // Step B1 -----
   describe('#(B1) Get the identity of a user', function() {
