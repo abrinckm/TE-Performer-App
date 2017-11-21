@@ -1,6 +1,7 @@
 const config = require('config');
+
 const assert = require('assert');
-const { UserProfile } = require('../src/models');
+const { UserProfile } = require('../../src/models');
 
 let userId, userModel;
 

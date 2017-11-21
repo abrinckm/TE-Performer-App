@@ -4,8 +4,12 @@
   "description": "Provides models for the different API resources & unit tests for testing user stories and workflows using the API.",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=dev ./node_modules/mocha/bin/mocha",
-    "prod": "NODE_ENV=prod ./node_modules/mocha/bin/mocha"
+    "dev-workflows": "NODE_ENV=dev ./node_modules/mocha/bin/mocha ./test/workflows",
+    "prod-workflows": "NODE_ENV=prod ./node_modules/mocha/bin/mocha ./test/workflows",
+    "generate-docs": "NODE_ENV=dev ./node_modules/mocha/bin/mocha --reporter doc > workflows.html",
+    "nyancat": "NODE_ENV=dev ./node_modules/mocha/bin/mocha --reporter nyan",
+    "dev-api": "NODE_ENV=dev ./node_modules/mocha/bin/mocha ./test/api",
+    "prod-api": "NODE_ENV=prod ./node_modules/mocha/bin/mocha ./test/api"
   },
   "repository": {
     "type": "git",
@@ -26,6 +30,7 @@
     "request-promise": "^4.2.2"
   },
   "devDependencies": {
+    "expect.js": "^0.3.1",
     "mocha": "^4.0.1"
   }
 }

@@ -40,6 +40,10 @@ class UserProfileWrapper extends BaseWrapper {
     return this._get(`/get/byConditionLabel/${condition}`);
   }
 
+  listByContext(condition, block) {
+    return this._get(`/get/byContext/${condition}/${block}`);
+  }
+
   getByUserName(username) {
     return this._get(`/get/byUserName/${username}`);
   }

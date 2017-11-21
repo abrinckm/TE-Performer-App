@@ -1,7 +1,19 @@
 const BaseModel = require('./base-model');
 const Promise = require('bluebird');
+const bunyan = require('bunyan');
 const _ = require('lodash');
 const { UserProfileWrapper } = require('../wrapper');
+
+const logger = bunyan.createLogger({
+  "name": "UserProfile",
+  "streams": [{
+      "level": "info",
+      "stream": process.stdout
+    }, {
+      "level": "error",
+      "stream": process.stderr
+  }]
+});
 
 class UserProfile extends BaseModel {
 
@@ -47,7 +59,7 @@ class UserProfile extends BaseModel {
     {
       byContext : {
         conditionLabel : "blah",
-        'block-label': "blah"
+        blockLabel: "blah"
       }
     }
   */
@@ -72,6 +84,15 @@ class UserProfile extends BaseModel {
       let value = q[filter];
       func = 'listByConditionLabel';
       values = [value];
+    // ** byContext **
+    } else if (filter === 'byContext') {
+      let _q = q[filter];
+      if (!_q.conditionLabel || !_q.blockLabel) {
+        const error = 'UserProfile.query() byContext expects {\'conditionLabel\': \'<val>\',  \'blockLabel\': \'<val>\'} ';
+        return new Promise((resolve, reject) => reject(error));
+      }
+      func = 'listByContext';
+      values = [_q.conditionLabel, _q.blockLabel];
     }
 
     // ----------------------------
@@ -98,6 +119,16 @@ class UserProfile extends BaseModel {
         return new UserProfile(userdata);
       })
     ;
+  }
+
+  /*
+  Find all records
+  */
+  static findAll() {
+    // (UserProfile does not have the ability to list all records)
+    logger.error(
+      'Cannot list UserProfiles... Please one of the filters [byIds, byConditionLabel, byContext]'
+    );
   }
 
   get(attr) {
