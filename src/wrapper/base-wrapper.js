@@ -33,7 +33,7 @@ class BaseWrapper {
     options = _.merge({
       headers: {'content-type':'application/json'},
       body: body,
-      json: true,
+      json: false,
     }, options || {}, {
       method: 'POST'
     });

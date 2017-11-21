@@ -107,10 +107,18 @@ class UserProfile extends BaseModel {
     // (as of the writing of this comment, only the 'lastActive' and 'trained' attributes can be updated.)
     let { id, trainedOn, lastActive } = this.data;
     const model = this;
-    Object.keys(trainedOn).reduce((_p, condition) => {
+
+    // Iterate through each 'trainedOn' and save the current booleans
+    const promiseToUpdateTrained = Object.keys(trainedOn).reduce((_p, condition) => {
       let val = trainedOn[condition];
-      return _p.then(model.wrapper.updateTrained.bind(wrapper, id, condition, val));
+      return _p.then(model.wrapper.updateTrained.bind(model.wrapper, id, condition, val));
     }, new Promise((r)=>{r()}));
+
+    // Iterate through each 'lastActive' and save the current timestamps
+    return Object.keys(lastActive).reduce((_p, condition) => {
+      let val = lastActive[condition];
+      return _p.then(model.wrapper.updateLastActive.bind(model.wrapper, id, condition, val));
+    }, promiseToUpdateTrained);
   }
 }
 

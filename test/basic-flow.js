@@ -19,7 +19,7 @@ describe('Basic Flow (steps B1 - B3)', function() {
         })
         .catch(e => {
           done(e) 
-        });
+        })
       ;
     });
 
@@ -46,12 +46,31 @@ describe('Basic Flow (steps B1 - B3)', function() {
   // Step B3 -------
   describe('#(B3) Notify T&E system of user activity', function() {
     
-    it(`should successfully set last active for condition`, function() {
+    it(`should successfully set last active`, function() {
       let conditionLabel = userModel.get('conditionLabel');
       let lastActive = `lastActive.${conditionLabel}`;
       const timestamp = Date.now();
+
       userModel.set(lastActive, timestamp);
       assert.equal(userModel.get(lastActive), timestamp);
+    });
+
+    it('should successfully save user activity', function(done) {
+      let conditionLabel = userModel.get('conditionLabel');
+      let timestamp = userModel.get(`lastActive.${conditionLabel}`);
+
+      userModel.save()
+        .then(res => {
+          return UserProfile.findRecord(userId);
+        })
+        .then(userdata => {
+          assert(userdata.get(`lastActive.${conditionLabel}`), timestamp);
+        })
+        .then(done)
+        .catch(e => {
+          done(e);
+        })
+      ;
     });
   });
 });
