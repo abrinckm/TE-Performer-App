@@ -13,14 +13,14 @@ This node.js module is meant to provide three things:
 - [ ] Problem
 
 ## Requirements
-- Node: v6.10 up to v8.8.1 (**note version 8.9.1 is not supported**)
-- Npm: v3.10.x up to v5.4.2 (**note version 5.5.1 is not supported**)
+- Node: v7.10 up to v8.8.1 (**note version 8.9.1 is not supported**)
+- Npm: v3.10.x up to v5.5.1
 - The tests are confirmed to work using node v8.5.0 (npm v5.3.0)
 
 ## Install
 First make sure you've installed Node.js, then run: \
 `npm install -g mocha` \
-`git clone <this_repository>` \
+`git clone https://github.com/CREATE-TE/cos_app` \
 `cd path/to/repo/` \
 `npm install`
 
