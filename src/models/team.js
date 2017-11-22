@@ -28,6 +28,49 @@ class Team extends BaseModel {
     }
 
     /*
+      Query returns a list of teams
+
+      @params q {JSON}
+        {
+          byContext : {
+            conditionLabel : "bard",
+            'blockLabel': "3"
+          }
+        }
+      */
+    static query(q) {
+        const wrapper = new TeamWrapper();
+        let func = Object.keys(q)[0];
+        let value = q[func];
+
+        switch(func) {
+            case 'getByIds': {
+                if(!Array.isArray(value)) {
+                    return new Promise((resolve, reject) => reject('Team.query() byIds expects an array of IDs'));
+                }
+                value = [value];
+            } break;
+            case 'getByConditionLabel': break;
+            case 'getByContext': break;
+            case 'getByProfileId': break;
+            default:
+                return new Promise((resolve, reject) => reject(`Unknown function call: ${func}`));
+        }
+
+        return wrapper[func](...Object.values(value))
+            .then(results => {
+                if(!Array.isArray(results)) {
+                    results = [results];
+                }
+
+                return results.reduce((models, data) => {
+                    models.push(new Team(data));
+                    return models;
+                }, []);
+            });
+    }
+
+    /*
     Find record will return a single team by id
     @params id {string}
     */
