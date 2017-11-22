@@ -20,6 +20,8 @@ This node.js module is meant to provide three things:
 ## Install
 First make sure you've installed Node.js, then run: \
 `npm install -g mocha` \
+`git clone <this_repository>` \
+`cd path/to/repo/` \
 `npm install`
 
 ## Usage
