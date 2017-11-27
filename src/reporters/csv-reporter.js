@@ -67,20 +67,21 @@ class CSVReporter extends mocha.reporters.Base {
         try { // CBR API sometimes double wraps json messages...
           json = JSON.parse(json);
         }
-        catch(e) {
-          // Couldn't parse message
-        }
+        catch(e) {}
       }
       catch(e) {
         // Couldn't parse message
       }
-      err = `Error: API responded with status ${status}: (${json.error}) "${json.message}"`;
+      err = `Error: API responded with status ${status}: (${json.error}) ${json.message}`;
     } 
     this._bufferLine(test.title, test.state, err);  
   }
 
   _bufferLine(test, state, err) {
-    err = err || '';
+    err = err || '_';
+    test = this._clean(String(test));
+    state = this._clean(String(state));
+    err = this._clean(String(err));
     let data = `${state},${this.endpoint},${test},${err}\n`;
     let oldBuf = this.buffer;
     let newBuf = Buffer.from(data);
@@ -88,9 +89,9 @@ class CSVReporter extends mocha.reporters.Base {
     this._write();
   }
 
-  _drain() {
-    this.isDraining = false;
-    this._write();
+  // Strip out all commas
+  _clean(str) {
+    return str.replace(/,/g, ';');
   }
 
   _write() {
@@ -102,6 +103,11 @@ class CSVReporter extends mocha.reporters.Base {
       this.isDraining = true;
       this.wStream.once('drain', this._drain.bind(this));
     }
+  }
+
+  _drain() {
+    this.isDraining = false;
+    this._write();
   }
 
   _end() {
