@@ -8,10 +8,10 @@ class Application extends BaseWrapper {
 
   getVersion() {
     const app = this;
-    this.get('/get')
+    return this.get('/get')
       .then(response => {
         let api_version = JSON.parse(response).version;
-        app.logger.info(`API Version is ${api_version}`);
+        return api_version;
       })
       .catch(e => {
         app.logger.error(e);

@@ -6,7 +6,8 @@
   "scripts": {
     "dev-workflows": "NODE_ENV=dev ./node_modules/mocha/bin/mocha ./test/workflows",
     "prod-workflows": "NODE_ENV=prod ./node_modules/mocha/bin/mocha ./test/workflows",
-    "generate-docs": "NODE_ENV=dev ./node_modules/mocha/bin/mocha ./test/api --reporter doc > testreport.html",
+    "prod-generate-csv": "NODE_ENV=prod ./node_modules/mocha/bin/mocha ./test/api --reporter src/reporters/csv-reporter | ./node_modules/.bin/bunyan -o short",
+    "dev-generate-csv": "NODE_ENV=dev ./node_modules/mocha/bin/mocha ./test/api --reporter src/reporters/csv-reporter | ./node_modules/.bin/bunyan -o short",
     "nyancat": "NODE_ENV=dev ./node_modules/mocha/bin/mocha ./test/api --reporter nyan",
     "dev-api": "NODE_ENV=dev ./node_modules/mocha/bin/mocha ./test/api",
     "prod-api": "NODE_ENV=prod ./node_modules/mocha/bin/mocha ./test/api"

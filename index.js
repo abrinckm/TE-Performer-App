@@ -1,21 +1,6 @@
 const config = require('config');
-const bunyan = require('bunyan');
 const { Application } = require('./src/wrapper');
-const { UserProfile } = require('./src/models');
-
-const logger = bunyan.createLogger({
-  "name": "TEDummyApp",
-  "streams": [
-    {
-      "level": "info",
-      "stream": process.stdout
-    },
-    {
-      "level": "error",
-      "stream": process.stderr
-    }
-  ]
-});
+const logger = require('./logger');
 
 let app = new Application({logger});
 app.getVersion();

@@ -96,7 +96,7 @@ describe('Test all /api/userProfile/ endpoints', function() {
     let response, userModel;
 
     it('should return status 200 OK', function(done) {
-      UserProfile.query({'byContext': {conditionLabel:'bard', blockLabel: 2}})
+      UserProfile.query({'byContext': {conditionLabel:'bard', blockLabel: '2'}})
         .then(_response => {
           response=_response;
           done();

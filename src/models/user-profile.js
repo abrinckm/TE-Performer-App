@@ -1,19 +1,9 @@
 const BaseModel = require('./base-model');
 const Promise = require('bluebird');
-const bunyan = require('bunyan');
 const _ = require('lodash');
 const { UserProfileWrapper } = require('../wrapper');
 
-const logger = bunyan.createLogger({
-  "name": "UserProfile",
-  "streams": [{
-      "level": "info",
-      "stream": process.stdout
-    }, {
-      "level": "error",
-      "stream": process.stderr
-  }]
-});
+const logger = require('../../logger');
 
 class UserProfile extends BaseModel {
 
@@ -127,7 +117,7 @@ class UserProfile extends BaseModel {
   static findAll() {
     // (UserProfile does not have the ability to list all records)
     logger.error(
-      'Cannot list UserProfiles... Please one of the filters [byIds, byConditionLabel, byContext]'
+      'Cannot list all UserProfiles... Please try one of these filters: [byIds, byConditionLabel, byContext]'
     );
   }
 
