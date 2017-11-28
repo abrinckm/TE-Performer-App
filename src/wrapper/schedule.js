@@ -1,4 +1,5 @@
 const BaseWrapper = require('./base-wrapper');
+const Promise = require('bluebird');
 
 class ScheduleWrapper extends BaseWrapper {
   constructor(params) {
@@ -6,22 +7,40 @@ class ScheduleWrapper extends BaseWrapper {
     this.apiUrl += '/schedule';
   }
 
-  listAll() {
-    const self = this;
-    self.logger.info('Fetching a list of all schedules...');
-    return self.get('/get')
+  _get(uri) {
+    return this.get(uri)
       .then(response => {
-        let schedules = JSON.parse(response).data;
-        self.logger.info(schedules);
-        return schedules;
-      })
-      .catch(e => {
-        self.logger.error(e);
+        return JSON.parse(response).data;
       })
     ;
   }
 
-  
+  listAll() {
+   return this._get('/get');
+  }
+
+  getByEntryId(id) {
+    return this._get(`/get/${id}`);
+  }  
+
+  listByContext(condition, block) {
+    // Must at least have condition
+    if (!condition) {
+      const error = 'ScheduleWrapper.listByContext() expects a condition-label; none given.';
+      return new Promise((resolve, reject) => reject(error));
+    }
+    
+    let url = `/get/byContext/${condition}`;
+    if (block) {
+      url += `/${block}`;
+    }
+
+    return this._get(url);
+  }
+
+  listActiveScheduleEntriesByUserId(userId) {
+    return this._get(`/get/active/byUserProfile/${userId}`);
+  }
 }
 
 module.exports = ScheduleWrapper;

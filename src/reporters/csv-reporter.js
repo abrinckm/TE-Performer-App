@@ -78,7 +78,7 @@ class CSVReporter extends mocha.reporters.Base {
   }
 
   _bufferLine(test, state, err) {
-    err = err || '_';
+    err = err || 'null';
     test = this._clean(String(test));
     state = this._clean(String(state));
     err = this._clean(String(err));
