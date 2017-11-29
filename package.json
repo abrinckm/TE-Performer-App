@@ -26,6 +26,7 @@
     "bluebird": "^3.5.1",
     "bunyan": "^1.8.12",
     "config": "^1.28.1",
+    "file-type": "^7.3.0",
     "lodash": "^4.17.4",
     "request": "^2.83.0",
     "request-promise": "^4.2.2"
