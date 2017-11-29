@@ -32,6 +32,18 @@ class Report extends BaseModel {
     }
 
     /*
+    Find record will return a single report by id
+    @params id {string}
+    */
+    static findRecord(id) {
+        const wrapper = new ReportWrapper();
+        return wrapper.getById(id)
+            .then(data => {
+                return new Report(data);
+            });
+    }
+
+    /*
     Find all will return a list of all reports
      */
     static findAll() {

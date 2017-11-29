@@ -16,6 +16,10 @@ class ReportWrapper extends BaseWrapper {
     listAll() {
         return this._get('/get');
     }
+
+    getById(id) {
+        return this._get(`/get/${id}`);
+    }
 }
 
 module.exports = ReportWrapper;
