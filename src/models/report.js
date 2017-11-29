@@ -91,6 +91,14 @@ class Report extends BaseModel {
             });
     }
 
+    static download(fileId) {
+        const wrapper = new ReportWrapper();
+        return wrapper.getFile(fileId)
+            .then(archive => {
+                return archive;
+            });
+    }
+
     get(attr) {
         return _.get(this.data, attr);
     }

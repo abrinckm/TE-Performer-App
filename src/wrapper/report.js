@@ -24,6 +24,13 @@ class ReportWrapper extends BaseWrapper {
     getByProblemId(profileId) {
         return this._get(`/get/byProblem/${profileId}`);
     }
+
+    getFile(fileId) {
+        return this.get(`/download/${fileId}`)
+            .then(response => {
+                return response;
+            });
+    }
 }
 
 module.exports = ReportWrapper;

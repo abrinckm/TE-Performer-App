@@ -1,5 +1,6 @@
 const assert = require('assert');
 const expect = require('expect.js');
+const fileType = require('file-type');
 const { Report } = require('../../src/models');
 
 describe('Test all /api/team/ endpoints', function() {
@@ -69,6 +70,25 @@ describe('Test all /api/team/ endpoints', function() {
             expect(response[0]).to.be.a(Report);
             //TODO specify expected report ID
             assert(response[0].get('id') === '5a13a078c9e77c00051f8977');
+        });
+    });
+
+    describe('#/api/report/download', function(){
+        let response;
+
+        it('should return status 200 OK', function(done){
+            Report.download('5a13a078c9e77c00051f8978')
+                .then(_response => {
+                    response = _response;
+                    done();
+                })
+                .catch(e => done(e));
+        });
+
+        it('should return a zip archive', function(){
+            let checkFileType = fileType(Buffer.from(response, 'binary'));
+
+            assert(checkFileType.mime === 'application/zip');
         });
     });
 });
