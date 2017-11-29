@@ -8,9 +8,9 @@ This node.js module is meant to provide three things:
 ## Models Currently Implemented
 - [x] UserProfile
 - [x] Team
-- [ ] Schedule
-- [ ] Report
-- [ ] Problem
+- [X] Schedule
+- [X] Report
+- [X] Problem
 
 ## Requirements
 - Node: v7.10 up to v8.8.1 (**note version 8.9.1 is not supported**)
@@ -73,7 +73,7 @@ For running tests against the API endpoints on www.createbetterreasoning.com: \
 `npm run prod-api`
 
 ## Generating test reports:
-You can generate the test reports as an HTML document by running: \
-`npm run generate-docs`
+You can generate the test reports as a CSV document by running: \
+`npm run prod-generate-csv` \
+`npm run dev-generate-csv`
 
-(WIP: Later, we will have CSV reporter to display the reports as a spreadsheet rather than in the browser.)
