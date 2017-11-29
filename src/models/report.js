@@ -32,6 +32,40 @@ class Report extends BaseModel {
     }
 
     /*
+      Query returns a list of reports
+
+      @params q {JSON}
+        {
+          getByProblemId : {
+            problemId : '5a13a078c9e77c00051f8977',
+          }
+        }
+      */
+    static query(q) {
+        const wrapper = new ReportWrapper();
+        let func = Object.keys(q)[0];
+        let value = q[func];
+
+        switch(func) {
+            case 'getByProblemId': break;
+            default:
+                return new Promise((resolve, reject) => reject(`Unknown function call: ${func}`));
+        }
+
+        return wrapper[func](...Object.values(value))
+            .then(results => {
+                if(!Array.isArray(results)) {
+                    results = [results];
+                }
+
+                return results.reduce((models, data) => {
+                    models.push(new Report(data));
+                    return models;
+                }, []);
+            });
+    }
+
+    /*
     Find record will return a single report by id
     @params id {string}
     */

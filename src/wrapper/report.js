@@ -20,6 +20,10 @@ class ReportWrapper extends BaseWrapper {
     getById(id) {
         return this._get(`/get/${id}`);
     }
+
+    getByProblemId(profileId) {
+        return this._get(`/get/byProblem/${profileId}`);
+    }
 }
 
 module.exports = ReportWrapper;

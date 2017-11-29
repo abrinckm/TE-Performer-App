@@ -50,4 +50,25 @@ describe('Test all /api/team/ endpoints', function() {
             assert(response.get('id') === reportId);
         });
     });
+
+    describe('#/api/report/get/byProblem', function(){
+        let response;
+
+        xit('should return status 200 OK', function(done){
+            //TODO specify valid problem ID
+            Report.query({ getByProblemId: { problemId: '5a139f37c9e77c00051f8927' }})
+                .then(_response => {
+                    response = _response;
+                    done();
+                })
+                .catch(e => done(e));
+        });
+
+        xit('should return a list that contains a single report with the correct report ID', function(){
+            expect(response).to.be.an(Array);
+            expect(response[0]).to.be.a(Report);
+            //TODO specify expected report ID
+            assert(response[0].get('id') === '5a13a078c9e77c00051f8977');
+        });
+    });
 });
