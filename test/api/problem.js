@@ -68,11 +68,12 @@ describe('Test all /api/problem/ endpoints', () => {
     });
 
     it('should have returned a problem entry', () => {
-      expect(response).to.be.a(Problem);
+      expect(response).to.be.an('array');
+      expect(response[0]).to.be.a(Problem);
     });
 
     it('should have entry for the given label', function() {
-      let eData = response.data;
+      let eData = response[0].data;
       expect(eData).to.have.property('label');
       assert.equal(eData.label, problemLabel);
     });

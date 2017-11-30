@@ -89,6 +89,7 @@ class UserProfile extends BaseModel {
     if (func && values) {
       return wrapper[func](...values)
         .then(results => {
+          if (!_.isArray(results)) { return [new UserProfile(results)]; }
           return results.reduce((models, userdata) => {
             models.push(new UserProfile(userdata));
             return models;

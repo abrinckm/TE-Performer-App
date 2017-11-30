@@ -59,10 +59,7 @@ class Team extends BaseModel {
 
         return wrapper[func](...Object.values(value))
             .then(results => {
-                if(!Array.isArray(results)) {
-                    results = [results];
-                }
-
+                if (!_.isArray(results)) { return [new Team(results)]; }
                 return results.reduce((models, data) => {
                     models.push(new Team(data));
                     return models;
@@ -89,6 +86,7 @@ class Team extends BaseModel {
         const wrapper = new TeamWrapper();
         return wrapper.listAll()
             .then(results => {
+                if (!_.isArray(results)) { return [new Team(results)]; }
                 return results.reduce((models, data) => {
                     models.push(new Team(data));
                     return models;

@@ -54,10 +54,7 @@ class Report extends BaseModel {
 
         return wrapper[func](...Object.values(value))
             .then(results => {
-                if(!Array.isArray(results)) {
-                    results = [results];
-                }
-
+                if (!_.isArray(results)) { return [new Report(results)]; }
                 return results.reduce((models, data) => {
                     models.push(new Report(data));
                     return models;
@@ -84,6 +81,7 @@ class Report extends BaseModel {
         const wrapper = new ReportWrapper();
         return wrapper.listAll()
             .then(results => {
+                if (!_.isArray(results)) { return [new Report(results)]; }
                 return results.reduce((models, data) => {
                     models.push(new Report(data));
                     return models;

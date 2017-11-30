@@ -4,6 +4,7 @@ const Team = require('./team');
 const Schedule = require('./schedule');
 const Problem = require('./problem');
 const Report = require('./report');
+const UserCommitment = require('./user-commitment');
 
 module.exports = {
   UserAttributes,
@@ -11,5 +12,6 @@ module.exports = {
   Team,
   Schedule,
   Problem,
-  Report
+  Report,
+  UserCommitment
 };

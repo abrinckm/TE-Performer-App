@@ -55,6 +55,7 @@ class Schedule extends BaseModel {
     if (func && values) {
       return wrapper[func](...values)
         .then(results => {
+          if (!_.isArray(results)) { return [new Schedule(results)]; }
           return results.reduce((models, entry) => {
             models.push(new Schedule(entry));
             return models;
@@ -82,6 +83,7 @@ class Schedule extends BaseModel {
   static findAll() {
     return wrapper.listAll()
       .then(entries => {
+        if (!_.isArray(entries)) { return [new Schedule(entries)]; }
         return entries.reduce((models, entry) => {
           models.push(new Schedule(entry));
           return models;

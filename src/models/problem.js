@@ -56,9 +56,7 @@ class Problem extends BaseModel {
     if (func && values) {
       return wrapper[func](...values)
         .then(results => {
-          if (!_.isArray(results)) {
-            return new Problem(results);
-          }
+          if (!_.isArray(results)) { return [new Problem(results)]; }
           return results.reduce((models, entry) => {
             models.push(new Problem(entry));
             return models;
@@ -86,6 +84,7 @@ class Problem extends BaseModel {
   static findAll() {
     return wrapper.listAll()
       .then(entries => {
+        if (!_.isArray(entries)) { return [new Problem(entries)]; }
         return entries.reduce((models, entry) => {
           models.push(new Problem(entry));
           return models;
