@@ -3,7 +3,7 @@ const expect = require('expect.js');
 const fileType = require('file-type');
 const { Report } = require('../../src/models');
 
-describe('Test all /api/team/ endpoints', function() {
+describe('Test all /api/report/ endpoints', function() {
     describe('#/api/report/get', function(){
         let response;
 
