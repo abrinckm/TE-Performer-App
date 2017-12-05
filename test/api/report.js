@@ -74,10 +74,20 @@ describe('Test all /api/report/ endpoints', function() {
     });
 
     describe('#/api/report/download', function(){
-        let response;
+        let response, zipFileId;
+
+        //Find a zipFileId to test with
+        before(function(done){
+            Report.findAll()
+                .then(_reports => {
+                    zipFileId = _reports[0].get('zipFileId');
+                    done();
+                })
+                .catch(e => done(e));
+        });
 
         it('should return status 200 OK', function(done){
-            Report.download('5a13a078c9e77c00051f8978')
+            Report.download(zipFileId)
                 .then(_response => {
                     response = _response;
                     done();
