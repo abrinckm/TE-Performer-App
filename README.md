@@ -80,6 +80,7 @@ You can generate the test reports as a CSV document by running: \
 ## Running the Workflows
 The workflows require additional python libraries to execute T&E's validation script. \
 It is recommended the following steps are done prior to running workflow steps:
+1. install virtualenv using your OS package manager (ex. `apt-get install virtualenv`)
 1. `virtualenv env` (setup a virtual environment for python 2.7)
 1. `source env/bin/activate` (enter python virtual env)
 1. `pip install -r requirements.txt` (install all dependencies for T&E's validation script)
