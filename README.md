@@ -77,3 +77,14 @@ You can generate the test reports as a CSV document by running: \
 `npm run prod-generate-csv` \
 `npm run dev-generate-csv`
 
+## Running the Workflows
+The workflows require additional python libraries to execute T&E's validation script. \
+It is recommended the following steps are done prior to running workflow steps:
+1. `virtualenv env` (setup a virtual environment for python 2.7)
+1. `source env/bin/activate` (enter python virtual env)
+1. `pip install -r requirements.txt` (install all dependencies for T&E's validation script)
+1. Now you should be able to run the workflow tests
+
+`npm run dev-workflows` \
+`npm run prod-workflows`
+
