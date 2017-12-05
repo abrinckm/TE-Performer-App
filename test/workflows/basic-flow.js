@@ -1,9 +1,10 @@
 const config = require('config');
-
+const ChildProcess = require('child_process');
 const assert = require('assert');
-const { UserProfile } = require('../../src/models');
+const expect = require('expect.js');
+const { UserProfile, Problem, Schedule, UserCommitment } = require('../../src/models');
 
-let userId, userModel;
+let userId, userModel, activeEntries, activeProblems;
 
 describe('Basic Flow (steps B1 - B3)', function() {
   
@@ -81,4 +82,100 @@ describe('Basic Flow (steps B1 - B3)', function() {
       ;
     });
   });
+
+  // Step B4 -------------
+  describe(`#(B4) Get the active problems for user)`, function(done) {
+    it(`should return list of all active problems and schedule entries`, function(done) {
+      let problems = Problem.query({byUserId: userId})
+        .then(active => {
+          activeProblems = active;
+          expect(active).to.be.an('array');
+          done();
+        })
+        .catch(e => done(e));
+      ;
+    });
+
+    it(`should return list of all active schedule entries`, function(done) {
+      let schedule_entries = Schedule.query({byUserId: userId})
+        .then(entries => {
+          activeEntries = entries;
+          expect(entries).to.be.an('array');
+          done();
+        })
+        .catch(e=>done(e))
+      ;
+    });
+  });
+
+  // Step B5 ------------
+  describe(`#(B5) Determine if in train/practice/test phase`, function() {
+    it(`should have exactly one problemLabel active for a list of schedule entries`, function() {
+      let problem = '___INIT___';
+      let exactlyOneActive = activeEntries.reduce((bool, entry) => {
+        let isSame = (problem === entry.get('problemLabel') || problem === '___INIT___');
+        problem = entry.get('problemLabel');
+        return bool & isSame;
+      }, true);
+      assert(exactlyOneActive);
+    });
+
+    it(`should have exactly one mode phase active for list of schedule entries`, function() {
+      let mode = '___INIT___';
+      let exactlyOneActive = activeEntries.reduce((bool, entry) => {
+        let isSame = (mode === entry.get('mode') || mode === '___INIT___');
+        mode = entry.get('mode');
+        return bool & isSame;
+      }, true);
+      assert(exactlyOneActive);
+    });
+  });
+
+  // Step B6 ---------------
+  describe(`#(B6) Download the problem if needed`, function() {
+    let testProblem;
+
+    it(`should filter actual problems to present to the user`, function() {
+      let filteredSet = activeProblems.filter(p=>!/(__.*__)/gi.test(p.get('problemLabel')));
+      expect(filteredSet).to.be.an('array');
+      if (filteredSet.length) {
+        testProblem = filteredSet[0];
+      }
+    });
+
+    it(`should download zipfile if exists`, function(done) {
+      if (testProblem) {
+        testProblem.get('zipfile')
+          .then(file => {
+            done();
+          })
+          .catch(e =>done(e))
+        ;
+      } else {
+        done();
+      }
+    });
+  });
+
+  // Step B7 -----------
+  describe(`#(B7) Notify T&E system of user commitment to problem`, function() {
+    it(`should successfully save commitment`, function(done) {
+      let userCommitment = new UserCommitment({
+        userProfileId: userId,
+        problemLabel: '__test__',
+        systemLabel: '*'
+      });
+      userCommitment.save().then(()=>{done()}).catch(e=>done(e));
+    });
+  });
+
+  // Step B8 -----------
+  describe(`#(B8) Validate report to upload`, function() {
+    it(`should validate the report using T&E provided script`, function(done) {
+      const spawn = ChildProcess.spawn;
+      const process = spawn('python', ["createapi_validate_zip.py", "report_artfuldeception_johndoe145.zip", "iarpacreate-v1-0.xsd"]);
+      process.stdout.on('data', ()=>{done()});
+      process.stderr.on('data', data=>done(data));
+    });
+  }); 
 });

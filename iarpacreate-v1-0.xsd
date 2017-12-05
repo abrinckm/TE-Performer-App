@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
+            targetNamespace="urn:us:iarpa:create"
+            xmlns:ic="urn:us:iarpa:create"
+            elementFormDefault="unqualified"
+            attributeFormDefault="unqualified"
+            version="1.0">
+
+  <xs:complexType name="pdf_or_html_document">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="id" type="xs:Name" use="optional"/>
+        <xs:attribute name="content-type" use="required">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="application/pdf"/>
+              <xs:enumeration value="text/html"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="uri" type="xs:anyURI" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="pdf_document">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="id" type="xs:Name" use="optional"/>
+        <xs:attribute name="content-type" use="required">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="application/pdf"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="uri" type="xs:anyURI" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="html_document">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="id" type="xs:Name" use="optional"/>
+        <xs:attribute name="content-type" use="required">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="text/html"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="uri" type="xs:anyURI" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="html_doc_with_subelements">
+		<xs:sequence>
+			<xs:element name="title" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="source" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>  
+        <xs:attribute name="id" type="xs:Name" use="optional"/>
+        <xs:attribute name="content-type" use="required">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="text/html"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="uri" type="xs:anyURI" use="required"/>
+  </xs:complexType>
+
+
+  
+  <xs:complexType name="keyquestion_document">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="id" use="required">
+          <xs:simpleType>
+		    <xs:restriction base="xs:Name">
+              <xs:pattern value="question[0-9]+"/>
+		    </xs:restriction>
+          </xs:simpleType>				
+		</xs:attribute>
+        <xs:attribute name="content-type" use="required">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="text/html"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="uri" type="xs:anyURI" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+   <xs:simpleType name="problem_version">
+      <xs:restriction base="xs:string">
+         <xs:pattern value="[0-9]+\.[0-9]+"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+  <!-- ========================================================== -->
+
+  <xs:element name="problem">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="id" type="xs:Name"/>
+
+       <xs:element name="version" type="ic:problem_version"/>
+
+       <xs:element name="image" minOccurs="1">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:string">
+                <xs:attribute name="content-type" use="required">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:enumeration value="image/png"/>
+                      <xs:enumeration value="image/jpeg"/>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="uri" type="xs:anyURI" use="required"/>
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="updateTimestamp" type="xs:dateTime"/>
+
+        <xs:element name="title" type="xs:string"/>
+
+        <xs:element name="summary" type="xs:string"/>
+
+        <xs:element name="problemAuthor" type="xs:token"/>
+
+        <xs:element name="reasoningStandard" type="xs:token" minOccurs="0" maxOccurs="unbounded"/>
+
+        <xs:element name="problemDetail">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="scenario" type="ic:html_document"/>
+              <xs:element name="keyQuestion" type="ic:keyquestion_document" minOccurs="1" maxOccurs="unbounded"/>
+              <xs:element name="evidence" type="ic:html_doc_with_subelements" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="ratingRubric" type="ic:pdf_or_html_document" minOccurs="0"/>
+
+        <xs:element name="resources" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence minOccurs="1" maxOccurs="unbounded">
+              <xs:element name="document" type="ic:pdf_or_html_document"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+		<xs:element name="singleFileRepresentation" type="ic:pdf_document" minOccurs="1" maxOccurs="1"/>
+		
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ========================================================== -->
+  <xs:element name="report">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="problemId" type="xs:Name"/>
+        <xs:element name="problemVersion" type="ic:problem_version"/>
+        <xs:element name="creationTimestamp" type="xs:dateTime"/>
+		
+		<xs:element name="reportContext">
+        <xs:complexType>
+		      <xs:choice>
+                 <xs:sequence>
+                   <xs:element name="sampleReport" type="xs:string"/>
+                 </xs:sequence>
+			  
+				 <xs:sequence>
+				   <xs:element name="condition" type="xs:token"/>
+				   <xs:element name="system" type="xs:token"/>
+				  <xs:element name="block" type="xs:token"/>
+				  <xs:element name="problemMode" type="xs:token"/>
+				</xs:sequence>
+			</xs:choice>
+         </xs:complexType>
+		</xs:element>
+
+        <xs:element name="reportAuthor" minOccurs="1" maxOccurs="unbounded">
+        <xs:complexType>
+             <xs:sequence>
+              <xs:element name="autoSubmit" type="xs:token" minOccurs="0" maxOccurs="1"/>
+              <xs:element name="userName" type="xs:token" minOccurs="0" maxOccurs="1"/>
+              <xs:element name="teamId" type="xs:token" minOccurs="0" maxOccurs="1"/>
+			  <xs:element name="deficientTeam" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+         </xs:complexType>
+        </xs:element>
+
+        <xs:element name="reportDocument" type="ic:pdf_document"/>
+
+        <xs:element name="supportingDocuments" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence minOccurs="1" maxOccurs="unbounded">
+              <xs:element name="document" type="ic:pdf_or_html_document"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  </xs:schema>

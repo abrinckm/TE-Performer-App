@@ -94,6 +94,12 @@ class Problem extends BaseModel {
   }
 
   get(attr) {
+    if (attr === 'zipfile') {
+      if (this.data.zipFileId === '' || !this.data.zipFileId) {
+        return new Promise((resolve, reject) => {resolve('no file');});
+      }
+      return wrapper.getProblemFile(this.data.zipFileId);
+    }
     return _.get(this.data, attr);
   }
 
