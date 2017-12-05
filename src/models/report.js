@@ -104,6 +104,18 @@ class Report extends BaseModel {
     set(attr, val) {
         return _.set(this.data, attr, val);
     }
+
+    /*
+    Save will create a new report from the file specified by path
+    @params path {string}
+     */
+    save(path) {
+        if(!path) {
+            return new Promise((resolve, reject) => reject('Cannot save report. No file path provided.'));
+        }
+        const wrapper = new ReportWrapper();
+        return wrapper.create(path);
+    }
 }
 
 module.exports = Report;

@@ -91,4 +91,23 @@ describe('Test all /api/report/ endpoints', function() {
             assert(checkFileType.mime === 'application/zip');
         });
     });
+
+    describe('#/api/report/upload', function(){
+        let response;
+
+        it('should return status 200 OK', function(done){
+            const newReport = new Report({});
+            newReport.save('report_artfuldeception_johndoe145.zip')
+                .then(_response => {
+                   response = _response;
+                   done();
+                })
+                .catch(e => done(e));
+        });
+
+        it('should have returned a confirmation message', function(){
+            expect(response).to.have.property('message');
+            assert.equal(response.message, 'file [report_artfuldeception_johndoe145.zip] uploaded successfully!');
+        });
+    });
 });

@@ -1,4 +1,5 @@
 const BaseWrapper = require('./base-wrapper');
+const fs = require('fs');
 
 class ReportWrapper extends BaseWrapper {
     constructor(params) {
@@ -29,6 +30,22 @@ class ReportWrapper extends BaseWrapper {
         return this.get(`/download/${fileId}`)
             .then(response => {
                 return response;
+            });
+    }
+
+    create(path) {
+        let options = {
+            formData: {
+                file: {
+                    value: fs.createReadStream(path),
+                    options: { contentType: 'application/x-zip-compressed' }
+                }
+            },
+        };
+
+        return this.post('/upload', null, options)
+            .then(response => {
+                return JSON.parse(response);
             });
     }
 }
