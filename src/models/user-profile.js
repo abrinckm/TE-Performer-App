@@ -83,6 +83,9 @@ class UserProfile extends BaseModel {
       }
       func = 'listByContext';
       values = [_q.conditionLabel, _q.blockLabel];
+    } else if (filter === 'trainedBySystemLabel') {
+      func = 'listTrained';
+      values = [ q[filter] ];
     }
 
     // ----------------------------

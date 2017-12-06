@@ -214,5 +214,23 @@ describe('Test all /api/userProfile/ endpoints', function() {
         .catch(e=>done(e))
       ;
     });
-  })
+  });
+
+  // ----
+  describe('#/api/userProfile/get/trained/bySystemLabel', function() {
+    let response;
+
+    it('should return status 200 OK', function(done) {
+      UserProfile.query({'trainedBySystemLabel': 'bard'})
+        .then(_response => {
+            response=_response;
+            done();
+        })
+        .catch(e=>done(e));
+    });
+
+    it('should return a list of users', function() {
+      expect(response).to.be.an('array');
+    });
+  });
 });
