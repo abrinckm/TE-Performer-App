@@ -221,10 +221,28 @@ describe('Test all /api/userProfile/ endpoints', function() {
     let response;
 
     it('should return status 200 OK', function(done) {
-      UserProfile.query({'trainedBySystemLabel': 'bard'})
+      UserProfile.query({trainedBySystemLabel: 'bard'})
         .then(_response => {
             response=_response;
             done();
+        })
+        .catch(e=>done(e));
+    });
+
+    it('should return a list of users', function() {
+      expect(response).to.be.an('array');
+    });
+  });
+
+  // ----
+  describe('#/api/userProfile/get/active/bySystemLabel/Time', function() {
+    let response;
+
+    it('should return status 200 OK', function(done) {
+      UserProfile.query({activeBySystemLabelTime: { systemLabel: 'bard', time: Date.now() }})
+        .then(_response => {
+          response=_response;
+          done();
         })
         .catch(e=>done(e));
     });
