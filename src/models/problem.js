@@ -50,6 +50,9 @@ class Problem extends BaseModel {
       let id = q[filter];
       func = 'listByUserId';
       values = [id];
+    } else if (filter === 'byUserIdTime') {
+      func = 'listByUserIdTime';
+      values = Object.values(q[filter]);
     }
 
     // ------------

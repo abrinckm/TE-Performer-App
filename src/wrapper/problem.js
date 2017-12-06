@@ -31,6 +31,10 @@ class ProblemWrapper extends BaseWrapper {
     return this._get(`/get/active/byUserProfile/${userId}`);
   }
 
+  listByUserIdTime(userId, timestamp) {
+      return this._get(`/get/active/byUserProfile/${userId}/${timestamp}`);
+  }
+
   getProblemFile(fileId) {
     return this.get(`/download/${fileId}`).then(response => {
       return response;
