@@ -6,7 +6,7 @@ const { UserProfile, Problem, Schedule, UserCommitment } = require('../../src/mo
 
 let userId, userModel, activeEntries, activeProblems;
 
-describe('Basic Flow (steps B1 - B8)', function() {
+describe('The following sequence of steps are taken, for example, for a user in the Bard group\n\n  Basic Flow (steps B1 - B8)', function() {
   
   before(function(done) {
     UserProfile.query({'byConditionLabel': 'bard'})
