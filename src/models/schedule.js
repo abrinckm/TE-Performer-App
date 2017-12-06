@@ -49,6 +49,10 @@ class Schedule extends BaseModel {
       let id = q[filter];
       func = 'listActiveScheduleEntriesByUserId';
       values = [id];
+    // ** byUserIdTime **
+    } else if (filter === 'byUserIdTime') {
+      func = 'listActiveScheduleEntriesByUserIdTime';
+      values = Object.values(q[filter]);
     }
 
     // ------------

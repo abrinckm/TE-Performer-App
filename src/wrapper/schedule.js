@@ -41,6 +41,10 @@ class ScheduleWrapper extends BaseWrapper {
   listActiveScheduleEntriesByUserId(userId) {
     return this._get(`/get/active/byUserProfile/${userId}`);
   }
+
+  listActiveScheduleEntriesByUserIdTime(userId, timestamp) {
+    return this._get(`/get/active/byUserProfile/${userId}/${timestamp}`);
+  }
 }
 
 module.exports = ScheduleWrapper;

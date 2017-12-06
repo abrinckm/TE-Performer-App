@@ -153,4 +153,35 @@ describe('Test all /api/schedule/ endpoints', () => {
 
   });
 
+    // ----
+    describe('#/api/schedule/get/active/byUserProfile/Time', () => {
+        let response, userId;
+
+        before(function(done) {
+            // Find a user to test with...
+            UserProfile.query({'byConditionLabel': 'bard'})
+                .then(_users => {
+                    userId=_users[0].get('id');
+                    done();
+                })
+                .catch(e=>done(e))
+            ;
+        });
+
+        it('should return status 200 OK', done => {
+            Schedule.query({byUserIdTime: { userId: userId, timestamp: Date.now() }})
+                .then(_response => {
+                    response=_response;
+                    done();
+                })
+                .catch(e=>done(e))
+            ;
+        });
+
+        it('should have returned a list of schedule entries', () => {
+            expect(response).to.be.an('array');
+        });
+
+    });
+
 });
