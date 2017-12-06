@@ -6,7 +6,7 @@ const { UserProfile, Problem, Schedule, UserCommitment } = require('../../src/mo
 
 let userId, userModel, activeEntries, activeProblems;
 
-describe('Basic Flow (steps B1 - B3)', function() {
+describe('Basic Flow (steps B1 - B8)', function() {
   
   before(function(done) {
     UserProfile.query({'byConditionLabel': 'bard'})
@@ -50,7 +50,7 @@ describe('Basic Flow (steps B1 - B3)', function() {
       assert.notEqual(userModel.get('conditionLabel'), 'choice');
     });
 
-  })
+  });
 
   // Step B3 -------
   describe('#(B3) Notify T&E system of user activity', function() {
@@ -84,7 +84,7 @@ describe('Basic Flow (steps B1 - B3)', function() {
   });
 
   // Step B4 -------------
-  describe(`#(B4) Get the active problems for user)`, function(done) {
+  describe(`#(B4) Get the active problems for user`, function(done) {
     it(`should return list of all active problems and schedule entries`, function(done) {
       let problems = Problem.query({byUserId: userId})
         .then(active => {
@@ -93,7 +93,6 @@ describe('Basic Flow (steps B1 - B3)', function() {
           done();
         })
         .catch(e => done(e));
-      ;
     });
 
     it(`should return list of all active schedule entries`, function(done) {
