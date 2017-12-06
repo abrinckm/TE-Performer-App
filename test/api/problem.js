@@ -1,6 +1,7 @@
 const assert = require('assert');
 const expect = require('expect.js');
 const _ = require('lodash');
+const fileType = require('file-type');
 const { Problem, UserProfile } = require('../../src/models');
 
 let entryId, problemLabel;
@@ -109,6 +110,35 @@ describe('Test all /api/problem/ endpoints', () => {
       expect(response).to.be.an('array');
     });
 
+  });
+
+  describe('#/api/problem/download', function(){
+    let response, zipFileId;
+
+    //Find a zipFileId to test with
+    before(function(done){
+      Problem.findAll()
+        .then(_problems => {
+          zipFileId = _problems[0].get('zipFileId');
+          done();
+        })
+        .catch(e => done(e));
+    });
+
+    it('should return status 200 OK', function(done){
+        Problem.download(zipFileId)
+          .then(_response => {
+            response = _response;
+            done();
+          })
+          .catch(e => done(e));
+    });
+
+    it('should return a zip archive', function(){
+      let checkFileType = fileType(Buffer.from(response, 'binary'));
+
+      assert(checkFileType.mime === 'application/zip');
+    });
   });
 
 });

@@ -93,6 +93,13 @@ class Problem extends BaseModel {
     ;
   }
 
+  static download(fileId) {
+    return wrapper.getProblemFile(fileId)
+      .then(archive => {
+        return archive;
+      });
+  }
+
   get(attr) {
     if (attr === 'zipfile') {
       if (this.data.zipFileId === '' || !this.data.zipFileId) {

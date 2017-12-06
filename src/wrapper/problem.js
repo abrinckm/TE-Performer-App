@@ -32,7 +32,9 @@ class ProblemWrapper extends BaseWrapper {
   }
 
   getProblemFile(fileId) {
-    return this._get(`/download/${fileId}`);
+    return this.get(`/download/${fileId}`).then(response => {
+      return response;
+    });
   }
 } 
 
