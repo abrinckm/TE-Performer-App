@@ -5,12 +5,13 @@ This node.js module is meant to provide three things:
 1. A series of mocha tests that report the state of the API. 
 1. A series of mocha tests showing how to use the provided models to play out some common workflow patterns typically used by performers.
 
-## Models Currently Implemented
+## Models Implemented
 - [x] UserProfile
 - [x] Team
 - [X] Schedule
 - [X] Report
 - [X] Problem
+- [X] UserCommitment
 
 ## Requirements
 - Node: v7.10 up to v8.8.1 (**note version 8.9.1 is not supported**)
