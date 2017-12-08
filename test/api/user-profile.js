@@ -251,4 +251,30 @@ describe('Test all /api/userProfile/ endpoints', function() {
       expect(response).to.be.an('array');
     });
   });
+
+  // ----
+  describe('#/api/userProfile/get/bySingleSignOn', function(){
+    let response;
+
+    /*
+      IMPORTANT
+      Once you have successfully logged in using valid user credentials. Copy and paste the auth token from the current
+      browser session cookie into the file named token.txt. The token should appear similar to the following:
+      JSESSIONID=F521D63500CD3F7C38B5990F462E21D8
+     */
+    it('should return status 200 OK', function(done) {
+      UserProfile.query({ bySingleSignOn: 'token.txt' })
+          .then(_response => {
+            response = _response;
+            done();
+          })
+          .catch(e => done(e));
+    });
+
+    it('should return a list with only one user', function() {
+      expect(response).to.be.an(Array);
+      expect(response).to.have.length(1);
+      expect(response[0]).to.be.a(UserProfile);
+    });
+  });
 });

@@ -1,4 +1,6 @@
 const BaseWrapper = require('./base-wrapper');
+const readline = require('readline');
+const fs = require('fs');
 
 class UserProfileWrapper extends BaseWrapper {
   constructor(params) {
@@ -66,6 +68,30 @@ class UserProfileWrapper extends BaseWrapper {
 
   listByTeam(teamId) {
     return this._get(`/get/byTeam/${teamId}`);
+  }
+
+  listCurrent(filePath) {
+    //read first line of file at specified path to get the token
+    let reader = readline.createInterface({
+        input: fs.createReadStream(filePath)
+    });
+
+    return new Promise((resolve) => {
+      reader.once('line', line => {
+          resolve(line);
+      });
+    })
+    .then(token => {
+      let options = {
+        headers: {
+          cookie: token
+      }};
+
+      return this.get('/get/bySingleSignOn', options);
+    })
+    .then(response => {
+      return JSON.parse(response).data;
+    });
   }
 
   updateTrained(profileId, sysLabel, trained) {

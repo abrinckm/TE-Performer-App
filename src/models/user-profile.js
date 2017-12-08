@@ -89,6 +89,9 @@ class UserProfile extends BaseModel {
     } else if (filter === 'activeBySystemLabelTime') {
       func = 'listActive';
       values = Object.values(q[filter]);
+    } else if (filter === 'bySingleSignOn') {
+        func = 'listCurrent';
+        values = [ q[filter] ];
     }
 
     // ----------------------------
