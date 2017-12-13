@@ -65,7 +65,12 @@ userModel.set('trainedOn.bard', true);        // setting trained on bard to true
 
 userModel.save();  // Saves lastActive and trainedOn states to the API
 ```
-
+## Prepare your Testing Environment
+Perform the following sequence of steps to ensure that all endpoints are available for testing:
+1. Successfully log into either https://www.createbetterreasoning.com or https://dev-www.createbetterreasoning.com using valid user credentials in your browser.
+2. Open your browser's development console and locate the cookie provided for your current session. The cookie should appear similar to the following `JSESSIONID=F521D63500CD3F7C38B5990F462E21D8`.
+3. Copy and paste the above cookie value to the first line of the file `token.txt` located at the root of this project.
+4. Proceed to run any tests described below.
 ## Running the Tests
 To run unit tests for all API endpoints on dev-www.createbetterreasoning.com: \
 `npm run dev-api` 
