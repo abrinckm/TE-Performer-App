@@ -81,7 +81,8 @@ For running tests against the API endpoints on www.createbetterreasoning.com: \
 ## Generating test reports:
 You can generate the test reports as a CSV document by running: \
 `npm run prod-generate-csv` \
-`npm run dev-generate-csv`
+`npm run dev-generate-csv` \
+`npm run cos-generate-csv` 
 
 ## Running the Workflows
 The workflows require additional python libraries to execute T&E's validation script. \
@@ -93,5 +94,6 @@ It is recommended the following steps are done prior to running workflow steps:
 1. Now you should be able to run the workflow tests
 
 `npm run dev-workflows` \
-`npm run prod-workflows`
+`npm run prod-workflows` \
+`npm run cos-workflows`
 
