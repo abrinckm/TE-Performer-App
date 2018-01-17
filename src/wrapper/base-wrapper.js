@@ -1,6 +1,9 @@
 const config = require('config');
 const request = require('request-promise');
+const requestSync = require('sync-request');
 const _ = require('lodash');
+
+let apiCookieJar = null;
 
 class BaseWrapper {
   constructor(params) {
@@ -11,7 +14,21 @@ class BaseWrapper {
       error:(out)=>{console.error(out)}
     };
     this.apiUrl = config.get('apiUrl');
-  }   
+
+    // Retrieve the API key token and save it as a cookie for subsequent requests
+    if(!apiCookieJar) {
+      let user = 'tne_cos';
+      let pass = '11FNl93wYL1';
+      //Synchronous call to ensure it is run first
+      let response = requestSync('POST', `${this.apiUrl}/auth/get/key/${user}/${pass}`);
+      let cookies = response['headers']['set-cookie'].filter(apikey=>apikey.startsWith('ApiKey'));
+      let tokens = cookies[0].split(';', 1);
+      let apiKey = tokens[0];
+      apiCookieJar = request.jar();
+      let cookie = request.cookie(apiKey);
+      apiCookieJar.setCookie(cookie, this.apiUrl);
+    }
+  }
 
   // --------------------
   // A simple GET request
@@ -19,11 +36,12 @@ class BaseWrapper {
     options = _.merge({
       headers: {
         'content-type': 'application/json'
-      }
+      },
+      jar: apiCookieJar,
     }, options || {});
 
     options.uri = `${this.apiUrl}${path}`;
-    
+
     return request(options);
   }
 
@@ -34,6 +52,7 @@ class BaseWrapper {
       headers: {'content-type':'application/json'},
       body: body,
       json: false,
+      jar: apiCookieJar,
     }, options || {}, {
       method: 'POST'
     });
