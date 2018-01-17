@@ -2,6 +2,7 @@ const config = require('config');
 const request = require('request-promise');
 const requestSync = require('sync-request');
 const _ = require('lodash');
+const fs = require('fs');
 
 let apiCookieJar = null;
 
@@ -17,8 +18,14 @@ class BaseWrapper {
 
     // Retrieve the API key token and save it as a cookie for subsequent requests
     if(!apiCookieJar) {
-      let user = 'tne_cos';
-      let pass = '11FNl93wYL1';
+      /*
+        Read username and password from file in root of project called creds.txt
+        Username is first line and password on second line.
+       */
+      let lines = fs.readFileSync('creds.txt', 'utf-8').split('\n').filter(Boolean);
+      let user = lines[0];
+      let pass = lines[1];
+
       //Synchronous call to ensure it is run first
       let response = requestSync('POST', `${this.apiUrl}/auth/get/key/${user}/${pass}`);
       let cookies = response['headers']['set-cookie'].filter(apikey=>apikey.startsWith('ApiKey'));
