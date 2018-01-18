@@ -73,7 +73,7 @@ Perform the following sequence of steps to ensure that all endpoints are availab
 4. Proceed to run any tests described below.
 
 ## API Authentication
-The API is not accessible unless you authenticate prior to making requests. To successfully authenticate place your Performer username and password that was provided to you in a file called `creds.txt` in the root of project. Your username must be placed on the first line and your password must be placed on the second line. You may receive a `401` error response if this step is not performed.
+The API is not accessible unless you authenticate prior to making requests. To successfully authenticate, first create a local settings file in the config directory for the environment you wish to run (e.g. config/local-dev.json). Next, place your Performer username and password that was provided to you in the local settings file (e.g. {"user":"<username>", "pass":"<password>"} ). You may receive a `401` error response if this step is not performed.
 
 ## Running the Tests
 To run unit tests for all API endpoints on dev-www.createbetterreasoning.com: \
