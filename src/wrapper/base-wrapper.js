@@ -5,6 +5,7 @@ const _ = require('lodash');
 const fs = require('fs');
 
 let apiCookieJar = null;
+let apiKey = null;
 
 class BaseWrapper {
   constructor(params) {
@@ -30,11 +31,15 @@ class BaseWrapper {
       let response = requestSync('POST', `${this.apiUrl}/auth/get/key/${user}/${pass}`);
       let cookies = response['headers']['set-cookie'].filter(apikey=>apikey.startsWith('ApiKey'));
       let tokens = cookies[0].split(';', 1);
-      let apiKey = tokens[0];
+      apiKey = tokens[0];
       apiCookieJar = request.jar();
       let cookie = request.cookie(apiKey);
       apiCookieJar.setCookie(cookie, this.apiUrl);
     }
+  }
+
+  static apiKey() {
+    return apiKey;
   }
 
   // --------------------

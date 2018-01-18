@@ -3,18 +3,30 @@ const ChildProcess = require('child_process');
 const assert = require('assert');
 const expect = require('expect.js');
 const { UserProfile, Problem, Schedule, UserCommitment } = require('../../src/models');
+const BaseWrapper = require('../../src/wrapper/base-wrapper');
 
 let userId, userModel, activeEntries, activeProblems;
 
 describe('The following sequence of steps are taken, for example, for a user in the Bard group\n\n  Basic Flow (steps B1 - B8)', function() {
-  
+
+  // Replace before with initial auth
   before(function(done) {
     UserProfile.query({'byConditionLabel': 'bard'})
       .then(_users => {
-        userId = _users.find(u=>u.get('userName')==='user-1005').get('id');
+        userId = _users.find(u=>u.get('userName')==='test-bard-4').get('id');
         done();
       })
+      .catch(e=>done(e));
     ;
+  });
+
+  // Step B0 -----
+  describe('#(B0) Get the API key using username and password credentials', function() {
+    it('should have an API key after instantiating wrapper', function() {
+      let bWrapper = new BaseWrapper();
+      let apiKey = BaseWrapper.apiKey();
+      expect(apiKey).to.not.be(null);
+    });
   });
 
   // Step B1 -----
@@ -34,7 +46,7 @@ describe('The following sequence of steps are taken, for example, for a user in 
 
     it('should confirm identity of the user', function() {
       let userName = userModel.get('userName');
-      assert(userName === 'user-1005');
+      assert(userName === 'test-bard-4');
     });
 
   });

@@ -23,6 +23,8 @@ class Problem extends BaseModel {
     };
 
     const self = this;
+
+    // Optimize ... by looping over self.data instead of params.data
     const data = params.data ? params.data : params;
     Object.keys(data).forEach(attr => {
       if (_.has(self.data, attr)) { 
