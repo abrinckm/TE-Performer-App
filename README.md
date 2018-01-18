@@ -71,6 +71,10 @@ Perform the following sequence of steps to ensure that all endpoints are availab
 2. Open your browser's development console and locate the cookie provided for your current session. The cookie should appear similar to the following `JSESSIONID=F521D63500CD3F7C38B5990F462E21D8`.
 3. Copy and paste the above cookie value to the first line of the file `token.txt` located at the root of this project.
 4. Proceed to run any tests described below.
+
+## API Authentication
+The API is not accessible unless you authenticate prior to making requests. To successfully authenticate place your Performer username and password that was provided to you in a file called `creds.txt` in the root of project. Your username must be placed on the first line and your password must be placed on the second line. You may receive a `401` error response if this step is not performed.
+
 ## Running the Tests
 To run unit tests for all API endpoints on dev-www.createbetterreasoning.com: \
 `npm run dev-api` 
