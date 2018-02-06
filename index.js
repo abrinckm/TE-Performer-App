@@ -1,12 +1,26 @@
-const config = require('config');
-const { Application } = require('./src/wrapper');
-const logger = require('./logger');
-const argv = require('yargs').argv;
+/*
+  spawn 4 workers for each performer category
 
-let app = new Application({logger});
-app.getVersion();
+*/
+const EventEmitter = require('events');
 
-let apiUrl = config.get('apiUrl');
+const myEmitter = new EventEmitter();
 
-logger.info(`Environment is ${process.env.NODE_ENV}`);
-logger.info(`Using API ${apiUrl}`);
+let start;
+
+const task = function(i) {
+  let sec_elapsed = (Date.now()/1000) - start;
+
+  // let workflow = require('workflow');
+  // workflow.then(() =>  {/*output to log with guid to match */});
+  console.log(`executing task ${i} at ${Math.floor(sec_elapsed)} sec after start.`);
+}
+
+for (let i = 0; i < 10; ++i) {
+  myEmitter.on('start', () => {
+    setTimeout(task.bind(this, i), 1000);
+  });
+}
+
+start = Date.now() / 1000;
+myEmitter.emit('start');
