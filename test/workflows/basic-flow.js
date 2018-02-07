@@ -20,6 +20,8 @@ describe('The following sequence of steps are taken, for example, for a user in 
     ;
   });
 
+  // workflow = promisechain;
+
   // Step B0 -----
   describe('#(B0) Get the API key using username and password credentials', function() {
     it('should have an API key after instantiating wrapper', function() {
