@@ -1,3 +1,6 @@
+const fs = require('fs');
+const readline = require('readline');
+const stream = require('stream');
 
 // Returns a random integer from a Poisson distribution
 // Source: http://bit.ly/2nLr1Kt
@@ -79,8 +82,12 @@ function drawHistogram(data) {
 }
 
 // Debug function to check the distribution of poisson values
-// Usage: checkDistribution(x, histogram(y, numIntervals));
-function checkDistribution(x, y) {
+// Usage: checkDistribution(histogram(y, numIntervals));
+function checkDistribution(y) {
+
+  // Generate an array of consecutive integers from 0 to numIntervals
+  let x = Array.from({length: numIntervals}, (value,index) => index);
+
   let data = [
     {
       x: x,
@@ -91,15 +98,42 @@ function checkDistribution(x, y) {
   drawHistogram(data);
 }
 
-let numEvents = 10000;
-let numIntervals = 600;
-let lambda = numIntervals/2;
+let numEvents = 0;
+let numIntervals = 600; // total time in seconds
+let lambda = numIntervals/2; // the time at which most events should occur
+let inputFilePath = process.argv[2];
+let outputFilePath = `stress_test/events_${Math.floor(Date.now()/1000)}.csv`;
 
-// Generate an array of consecutive integers from 0 to numIntervals
-let x = Array.from({length: numIntervals}, (value,index) => index);
+fs.createReadStream(inputFilePath)
+  .on('data', function(chunk) {
+    // Rapidly read the number of lines/events in the input file
+    for (let i = 0; i < chunk.length; i++) {
+      const LINE_FEED = '\n'.charCodeAt(0);
+      if (chunk[i] === LINE_FEED) numEvents++;
+    }
+  })
+  .on('end', function() {
+    // Subtract 1 so that the CSV file header is not counted
+    numEvents -= 1;
 
-// Generate an array of random integers from a Poisson distribution
-let y = Array.from({length: numEvents}, () => randomPoisson(lambda));
+    // Generate an array of random integers from a Poisson distribution
+    let startTimes = Array.from({length: numEvents}, () => randomPoisson(lambda));
 
-// Scale values to span across the given interval
-y = scaleToRange(y, numIntervals);
+    // Scale values to span across the given interval
+    startTimes = scaleToRange(startTimes, numIntervals);
+
+    let instream = fs.createReadStream(inputFilePath);
+    let outstream = fs.createWriteStream(outputFilePath);
+    let rl = readline.createInterface(instream, outstream);
+    let lineCount = 0;
+
+    // Read the input file line by line and append the timing
+    // column then write to output file
+    rl.on('line', function(line) {
+      if(lineCount === 0)
+        outstream.write(`${line},time\n`);
+      else
+        outstream.write(`${line},${startTimes[lineCount-1]}\n`);
+      lineCount++;
+    });
+  });
