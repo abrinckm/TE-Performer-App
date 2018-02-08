@@ -1,4 +1,8 @@
 {
   "env": "dev",
-  "apiUrl" : "https://dev-www.createbetterreasoning.com/api"
+  "apiUrl" : "https://dev-www.createbetterreasoning.com/api",
+  "performer-systems": [
+    {"name": "COARG"},
+    {"name": "BARD"}
+  ]
 }

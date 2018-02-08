@@ -13,7 +13,8 @@
     "nyancat": "NODE_ENV=dev ./node_modules/mocha/bin/mocha ./test/api --reporter nyan",
     "dev-api": "NODE_ENV=dev ./node_modules/mocha/bin/mocha ./test/api",
     "prod-api": "NODE_ENV=prod ./node_modules/mocha/bin/mocha ./test/api",
-    "cos-api": "NODE_ENV=cos ./node_modules/mocha/bin/mocha ./test/api"
+    "cos-api": "NODE_ENV=cos ./node_modules/mocha/bin/mocha ./test/api",
+    "dev-stress": "NODE_ENV=dev node index.js | ./node_modules/.bin/bunyan -o short"
   },
   "repository": {
     "type": "git",
