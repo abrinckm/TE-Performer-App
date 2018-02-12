@@ -15,7 +15,7 @@
     "prod-api": "NODE_ENV=prod ./node_modules/mocha/bin/mocha ./test/api",
     "cos-api": "NODE_ENV=cos ./node_modules/mocha/bin/mocha ./test/api",
     "gen-stress-csv": "node ./stress_test/generate-csv.js",
-    "dev-stress": "NODE_ENV=dev node index.js | ./node_modules/.bin/bunyan -o short"
+    "dev-stress": "NODE_ENV=dev node ./stress_test/index.js $TASKS_FILE | ./node_modules/.bin/bunyan -o short"
   },
   "repository": {
     "type": "git",
