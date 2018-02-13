@@ -10,7 +10,6 @@ if (cluster.isMaster) {
   // NOTE(Adam): Making the assumption that the tasks file is in CSV format
   //             Parse the CSV file and separate tasks for workers
   let rows = file_contents.split('\n');
-
   let headers = rows.shift().split(',');
   let tasks_per_worker = performer_systems.reduce((acc, sys)=>{
     acc[sys.name] = [];
@@ -69,21 +68,24 @@ if (cluster.isMaster) {
   let sys = process.env.performer_system;
   console.log(`[Worker ${process.pid}]: Started node for performer: ${sys}`);
 
-  let start_time;
-  
   // NOTE(Adam): A task will execute a series of async requests to T&E API to simulate a workflow
   const executeTask = (worker_id, task_id, user_id, problem_id, workflow_id, num_of_tasks) => {
-    let sec_elapsed = (Date.now() / 1000) - start_time;
+    let sec_elapsed = (Date.now() - process.env.start_time) / 1000;
 
     // TODO(Adam): Import the workflow 
     // let workflow = require('workflow');
     
     // TODO(Adam): Execute workflow, then log output
     // workflow.then(() =>  {/*output to log with guid to match */});
-    console.log(`[Worker ${worker_id}]: (Task ${task_id}) User ${user_id} is executing workflow ${workflow_id} at ${sec_elapsed} sec after start.`);
+    console.log(`[Worker ${worker_id}]: (${process.env.performer_system} ${task_id}) User ${user_id} is executing workflow ${workflow_id} at ${Math.floor(sec_elapsed)} sec after start.`);
 
     // NOTE(Adam): The following if statement will need to be moved into the resulting workflow promise chain.
-    if (task_id === (num_of_tasks - 1)) {
+    if (++process.env.tasks_executed >= process.env.tasks_length) {
+      console.log(`-----------------------------------------------------------`);
+      console.log(`[Worker ${process.pid}]: Ended node for performer: ${process.env.performer_system}`);
+      console.log(`Total number of tasks executed: ${process.env.tasks_executed}`);
+      console.log(`Total time taken: ${sec_elapsed} seconds`);
+      console.log(`-----------------------------------------------------------`);
       process.exit(0);
     }
   };
@@ -107,19 +109,32 @@ if (cluster.isMaster) {
     // NOTE(Adam): Making the assumption that an array is the list of tasks
     if (Array.isArray(msg)) {   
       let tasks = msg;
-      process.setMaxListeners(tasks.length + 2); 
-      
+      process.setMaxListeners(tasks.length + 3); 
+      process.env.tasks_length = tasks.length;
+      process.env.tasks_executed = 0;
+
+      console.log(`[Worker ${process.pid}]: (${process.env.performer_system}) Total number of tasks to execute: ${process.env.tasks_length}`);
+
+      const setStartTime = (msg) => {
+        if (msg === 'start') {
+          process.env.start_time = Date.now();
+        }
+        process.removeListener('message', setStartTime);
+      }
+
+      process.on('message', setStartTime);
+
       for (let i = 0; i < tasks.length; ++i) {
         let task_id = i;  
         let task = tasks[i];
         
         // NOTE(Adam): Await the start signal before setting the timeouts.
         process.on('message', msg => {
+          let drift = (!process.env.start_time) ? 0 : Date.now() - process.env.start_time;
           if (msg === 'start') {
-            start_time = Date.now() / 1000;
             setTimeout(
               executeTask.bind(this, process.pid, task_id, task.user, task.problem, task.activity, tasks.length), 
-              task.time * 1000  // NOTE(Adam): Time delta in seconds from the start time
+              (task.time * 1000) - drift  // NOTE(Adam): Time delta in seconds from the start time
             );
           } else {
             return handleMessage(msg);
