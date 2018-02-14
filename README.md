@@ -82,6 +82,15 @@ To run unit tests for all API endpoints on dev-www.createbetterreasoning.com: \
 For running tests against the API endpoints on www.createbetterreasoning.com: \
 `npm run prod-api`
 
+## Stress Testing the API
+To begin stress testing the system, there are two scripts that first need to be ran. The first will take as input a CSV file containing the tasks to execute against the API. (See /stress_test/mock_input.csv for an example). That file is then used to generate a task distribution, where each task is assigned a time delta according to a Poisson distribution. \
+The second script will take as input the generated CSV of the first script and spawn a multi-threaded cluster of nodes which will execute tasks concurrently to simulate real user activity. Each node (or thread) targets a specific performer system. \
+
+1. First Generate the Poisson distribution CSV file: \
+`npm run gen-stress-csv /path/to/input.csv/` 
+1. Second Run the stress test. Set the TASKS_FILE to the path of the output file from the first script: \
+`TASKS_FILE=/path/to/events_distribution.csv npm run dev-stress`
+
 ## Generating test reports:
 You can generate the test reports as a CSV document by running: \
 `npm run prod-generate-csv` \
