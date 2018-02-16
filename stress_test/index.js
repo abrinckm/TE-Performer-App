@@ -42,7 +42,7 @@ if (cluster.isMaster) {
     for (const id in cluster.workers) {
       process.nextTick(cb.bind(cb, cluster.workers[id]));
     }
-  }
+  };
 
   // NOTE(Adam): Fork one worker per performer system
   for (let i = 0; i < performer_systems.length; ++i) {
@@ -73,21 +73,24 @@ if (cluster.isMaster) {
     let sec_elapsed = (Date.now() - process.env.start_time) / 1000;
 
     // TODO(Adam): Import the workflow 
-    // let workflow = require('workflow');
+    const workflow = require('./workflow.js');
     
     // TODO(Adam): Execute workflow, then log output
-    // workflow.then(() =>  {/*output to log with guid to match */});
-    console.log(`[Worker ${worker_id}]: (${process.env.performer_system} ${task_id}) User ${user_id} is executing workflow ${workflow_id} at ${Math.floor(sec_elapsed)} sec after start.`);
+    workflow.run(workflow_id, user_id, problem_id, (obj)=>{
+      console.log(JSON.stringify(obj, null, 2));
+      // workflow.then(() =>  {/*output to log with guid to match */});
+      console.log(`[Worker ${worker_id}]: (${process.env.performer_system} ${task_id}) User ${user_id} is executing workflow ${workflow_id} at ${Math.floor(sec_elapsed)} sec after start.`);
 
-    // NOTE(Adam): The following if statement will need to be moved into the resulting workflow promise chain.
-    if (++process.env.tasks_executed >= process.env.tasks_length) {
-      console.log(`-----------------------------------------------------------`);
-      console.log(`[Worker ${process.pid}]: Ended node for performer: ${process.env.performer_system}`);
-      console.log(`Total number of tasks executed: ${process.env.tasks_executed}`);
-      console.log(`Total time taken: ${sec_elapsed} seconds`);
-      console.log(`-----------------------------------------------------------`);
-      process.exit(0);
-    }
+      // NOTE(Adam): The following if statement will need to be moved into the resulting workflow promise chain.
+      if (++process.env.tasks_executed >= process.env.tasks_length) {
+        console.log(`-----------------------------------------------------------`);
+        console.log(`[Worker ${process.pid}]: Ended node for performer: ${process.env.performer_system}`);
+        console.log(`Total number of tasks executed: ${process.env.tasks_executed}`);
+        console.log(`Total time taken: ${sec_elapsed} seconds`);
+        console.log(`-----------------------------------------------------------`);
+        process.exit(0);
+      }
+    });
   };
 
   const handleMessage = (msg) => {
@@ -120,7 +123,7 @@ if (cluster.isMaster) {
           process.env.start_time = Date.now();
         }
         process.removeListener('message', setStartTime);
-      }
+      };
 
       process.on('message', setStartTime);
 
