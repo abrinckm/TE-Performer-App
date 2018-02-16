@@ -17,7 +17,7 @@ if (cluster.isMaster) {
   }, {});
   let performer_systems_names = Object.keys(tasks_per_worker);
 
-  rows.forEach(row => {
+  rows.forEach((row, index) => {
     if (row !== '') {
       let i = 0;
       let action = row.split(',').reduce((acc, col) => {
@@ -25,6 +25,7 @@ if (cluster.isMaster) {
         acc[header_name] = col;
         return acc;
       }, {});
+      action['id'] = index;
       
       action.system = action.system.toUpperCase();
       if (action.system === 'RANDOM') {
@@ -77,9 +78,17 @@ if (cluster.isMaster) {
     
     // TODO(Adam): Execute workflow, then log output
     workflow.run(workflow_id, user_id, problem_id, (obj)=>{
-      console.log(JSON.stringify(obj, null, 2));
-      // workflow.then(() =>  {/*output to log with guid to match */});
       console.log(`[Worker ${worker_id}]: (${process.env.performer_system} ${task_id}) User ${user_id} is executing workflow ${workflow_id} at ${Math.floor(sec_elapsed)} sec after start.`);
+      let event_output = {
+        id: task_id,
+        system: sys,
+        user: user_id,
+        workflow: workflow_id,
+        problem: problem_id,
+        results: obj
+      };
+      console.log(JSON.stringify(event_output, null, 0));
+      // workflow.then(() =>  {/*output to log with guid to match */});
 
       // NOTE(Adam): The following if statement will need to be moved into the resulting workflow promise chain.
       if (++process.env.tasks_executed >= process.env.tasks_length) {
@@ -136,7 +145,7 @@ if (cluster.isMaster) {
           let drift = (!process.env.start_time) ? 0 : Date.now() - process.env.start_time;
           if (msg === 'start') {
             setTimeout(
-              executeTask.bind(this, process.pid, task_id, task.user, task.problem, task.activity, tasks.length), 
+              executeTask.bind(this, process.pid, task.id, task.user, task.problem, task.activity, tasks.length),
               (task.time * 1000) - drift  // NOTE(Adam): Time delta in seconds from the start time
             );
           } else {
