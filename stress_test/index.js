@@ -1,4 +1,5 @@
 const cluster = require('cluster');
+const fs = require('fs');
 
 if (cluster.isMaster) {
   let performer_systems = require('config').get('performer-systems');
@@ -6,6 +7,8 @@ if (cluster.isMaster) {
     
   let tasks_file = process.argv[2];
   let file_contents = require('fs').readFileSync(tasks_file).toString();
+  // let output_file_path = `stress_test/events_${Math.floor(Date.now()/1000)}.csv`;
+  let output_file_path = 'stress_test/output_.log';
 
   // NOTE(Adam): Making the assumption that the tasks file is in CSV format
   //             Parse the CSV file and separate tasks for workers
@@ -35,7 +38,7 @@ if (cluster.isMaster) {
     
       if (tasks_per_worker[action.system]) {
         tasks_per_worker[action.system].push(action);
-      } 
+      }
     }
   });
 
@@ -50,7 +53,8 @@ if (cluster.isMaster) {
     let performer_name = performer_systems[i].name.toUpperCase();
     const worker = cluster.fork({
       performer_system: performer_name,
-      tasks_file: tasks_file
+      tasks_file: tasks_file,
+      log_path: output_file_path
     });
     worker.on('message', msg => {
       if (msg === 'ready') {
@@ -75,7 +79,7 @@ if (cluster.isMaster) {
 
     // TODO(Adam): Import the workflow 
     const workflow = require('./workflow.js');
-    
+
     // TODO(Adam): Execute workflow, then log output
     workflow.run(workflow_id, user_id, problem_id, (obj)=>{
       console.log(`[Worker ${worker_id}]: (${process.env.performer_system} ${task_id}) User ${user_id} is executing workflow ${workflow_id} at ${Math.floor(sec_elapsed)} sec after start.`);
@@ -87,8 +91,10 @@ if (cluster.isMaster) {
         problem: problem_id,
         results: obj
       };
-      console.log(JSON.stringify(event_output, null, 0));
-      // workflow.then(() =>  {/*output to log with guid to match */});
+      let outstream = fs.createWriteStream(process.env.log_path, {flags: 'a'});
+      outstream.on('error', console.error);
+      outstream.write(`${JSON.stringify(event_output, null, 0)}\n`);
+      outstream.end();
 
       // NOTE(Adam): The following if statement will need to be moved into the resulting workflow promise chain.
       if (++process.env.tasks_executed >= process.env.tasks_length) {
