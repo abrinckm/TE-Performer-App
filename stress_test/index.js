@@ -9,6 +9,7 @@ if (cluster.isMaster) {
   let file_contents = require('fs').readFileSync(tasks_file).toString();
   // let output_file_path = `stress_test/events_${Math.floor(Date.now()/1000)}.csv`;
   let output_file_path = 'stress_test/output_.log';
+  fs.createWriteStream(output_file_path).end(); // Create a new file for logging output
 
   // NOTE(Adam): Making the assumption that the tasks file is in CSV format
   //             Parse the CSV file and separate tasks for workers
@@ -85,6 +86,7 @@ if (cluster.isMaster) {
       console.log(`[Worker ${worker_id}]: (${process.env.performer_system} ${task_id}) User ${user_id} is executing workflow ${workflow_id} at ${Math.floor(sec_elapsed)} sec after start.`);
       let event_output = {
         id: task_id,
+        starttime: sec_elapsed,
         system: sys,
         user: user_id,
         workflow: workflow_id,
@@ -93,18 +95,18 @@ if (cluster.isMaster) {
       };
       let outstream = fs.createWriteStream(process.env.log_path, {flags: 'a'});
       outstream.on('error', console.error);
-      outstream.write(`${JSON.stringify(event_output, null, 0)}\n`);
-      outstream.end();
-
-      // NOTE(Adam): The following if statement will need to be moved into the resulting workflow promise chain.
-      if (++process.env.tasks_executed >= process.env.tasks_length) {
-        console.log(`-----------------------------------------------------------`);
-        console.log(`[Worker ${process.pid}]: Ended node for performer: ${process.env.performer_system}`);
-        console.log(`Total number of tasks executed: ${process.env.tasks_executed}`);
-        console.log(`Total time taken: ${sec_elapsed} seconds`);
-        console.log(`-----------------------------------------------------------`);
-        process.exit(0);
-      }
+      outstream.write(`${JSON.stringify(event_output, null, 0)}\n`, 'utf8', ()=>{
+        outstream.end();
+        // NOTE(Adam): The following if statement will need to be moved into the resulting workflow promise chain.
+        if (++process.env.tasks_executed >= process.env.tasks_length) {
+          console.log(`-----------------------------------------------------------`);
+          console.log(`[Worker ${process.pid}]: Ended node for performer: ${process.env.performer_system}`);
+          console.log(`Total number of tasks executed: ${process.env.tasks_executed}`);
+          console.log(`Total time taken: ${sec_elapsed} seconds`);
+          console.log(`-----------------------------------------------------------`);
+          process.exit(0);
+        }
+      });
     });
   };
 
