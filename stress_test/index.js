@@ -1,5 +1,6 @@
 const cluster = require('cluster');
 const fs = require('fs');
+const BaseWrapper = require('../src/wrapper/base-wrapper');
 
 if (cluster.isMaster) {
   let performer_systems = require('config').get('performer-systems');
@@ -49,12 +50,17 @@ if (cluster.isMaster) {
     }
   };
 
+  //Request an API key that will be shared by all the workers
+  let base_wrapper = new BaseWrapper();
+  let api_key = BaseWrapper.apiKey();
+
   // NOTE(Adam): Fork one worker per performer system
   for (let i = 0; i < performer_systems.length; ++i) {
     let performer_name = performer_systems[i].name.toUpperCase();
     const worker = cluster.fork({
       performer_system: performer_name,
       tasks_file: tasks_file,
+      api_key: api_key,
       log_path: output_file_path
     });
     worker.on('message', msg => {
@@ -72,17 +78,18 @@ if (cluster.isMaster) {
   }
 } else if (cluster.isWorker) {
   let sys = process.env.performer_system;
+  let api_key = process.env.api_key;
   console.log(`[Worker ${process.pid}]: Started node for performer: ${sys}`);
 
   // NOTE(Adam): A task will execute a series of async requests to T&E API to simulate a workflow
-  const executeTask = (worker_id, task_id, user_id, problem_id, workflow_id, num_of_tasks) => {
+  const executeTask = (api_key, worker_id, task_id, user_id, problem_id, workflow_id, num_of_tasks) => {
     let sec_elapsed = (Date.now() - process.env.start_time) / 1000;
 
     // TODO(Adam): Import the workflow 
     const workflow = require('./workflow.js');
 
     // TODO(Adam): Execute workflow, then log output
-    workflow.run(workflow_id, user_id, problem_id, (obj)=>{
+    workflow.run(api_key, workflow_id, user_id, problem_id, (obj)=>{
       console.log(`[Worker ${worker_id}]: (${process.env.performer_system} ${task_id}) User ${user_id} is executing workflow ${workflow_id} at ${Math.floor(sec_elapsed)} sec after start.`);
       let event_output = {
         id: task_id,
@@ -145,7 +152,6 @@ if (cluster.isMaster) {
       process.on('message', setStartTime);
 
       for (let i = 0; i < tasks.length; ++i) {
-        let task_id = i;  
         let task = tasks[i];
         
         // NOTE(Adam): Await the start signal before setting the timeouts.
@@ -153,7 +159,7 @@ if (cluster.isMaster) {
           let drift = (!process.env.start_time) ? 0 : Date.now() - process.env.start_time;
           if (msg === 'start') {
             setTimeout(
-              executeTask.bind(this, process.pid, task.id, task.user, task.problem, task.activity, tasks.length),
+              executeTask.bind(this, api_key, process.pid, task.id, task.user, task.problem, task.activity, tasks.length),
               (task.time * 1000) - drift  // NOTE(Adam): Time delta in seconds from the start time
             );
           } else {
