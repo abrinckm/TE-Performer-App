@@ -1,6 +1,6 @@
 const fs = require('fs');
 const readline = require('readline');
-const stream = require('stream');
+const yargs = require('yargs');
 
 // Returns a random integer from a Poisson distribution
 // Source: http://bit.ly/2nLr1Kt
@@ -98,10 +98,26 @@ function checkDistribution(y) {
   drawHistogram(data);
 }
 
+const DEFAULT_SECONDS = 30;
+
+const argv = yargs
+  .usage('Usage: $0 [options] <file>')
+  .example('$0 input.csv', 'Generate a timing column for an input CSV file')
+  .example('$0 -s 600 input.csv', 'Optionally set the total time in seconds, defaults to 30 seconds')
+  .demandCommand(1, 1, 'ERROR: Please specify a CSV input file')
+  .number('s')
+  .default('s', DEFAULT_SECONDS)
+  .alias('s', 'seconds')
+  .describe('s', 'Total interval of time in seconds')
+  .help('h')
+  .alias('h', 'help')
+  .version(false)
+  .argv;
+
 let numEvents = 0;
-let numIntervals = 600; // total time in seconds
+let numIntervals = argv.seconds; // total time in seconds
 let lambda = numIntervals/2; // the time at which most events should occur
-let inputFilePath = process.argv[2];
+let inputFilePath = argv._[0];
 let outputFilePath = `stress_test/events_${Math.floor(Date.now()/1000)}.csv`;
 
 fs.createReadStream(inputFilePath)
@@ -114,7 +130,7 @@ fs.createReadStream(inputFilePath)
   })
   .on('end', function() {
     // Subtract 1 so that the CSV file header is not counted
-    numEvents -= 1;
+    numEvents--;
 
     // Generate an array of random integers from a Poisson distribution
     let startTimes = Array.from({length: numEvents}, () => randomPoisson(lambda));
