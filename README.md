@@ -87,7 +87,9 @@ To begin stress testing the system, there are two scripts that first need to be 
 The second script will take as input the generated CSV of the first script and spawn a multi-threaded cluster of nodes which will execute tasks concurrently to simulate real user activity. Each node (or thread) targets a specific performer system. 
 
 1. First Generate the Poisson distribution CSV file: \
-`npm run gen-stress-csv /path/to/input.csv/` 
+`npm run gen-stress-csv /path/to/input.csv`\
+Optionally, specify the total time interval in seconds that the events should be distributed across: \
+`npm run gen-stress-csv -- --seconds 90 /path/to/input.csv`
 1. Second Run the stress test. Set the TASKS_FILE to the path of the output file from the first script: \
 `TASKS_FILE=/path/to/events_distribution.csv npm run dev-stress`
 
